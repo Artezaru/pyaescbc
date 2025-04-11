@@ -6,6 +6,18 @@ Description of the package
 
 AES-CBC encryption tools based on crytography package !
 
+The package `pyaescbc` provides functions to encrypt and decrypt data using the AES-CBC encryption mode. 
+The package is written in Python and uses the `cryptography` library for the AES encryption and decryption. 
+The package also provides functions to generate a derived key from a password and a pin, and to create an HMAC value from the derived key, IV, and ciphertext. 
+The package is designed to be easy to use and secure, and it is suitable for encrypting sensitive data.
+
+The encryption process is designed as follow :
+
+.. image:: ../../pyaescbc/ressources/encrypt.png
+    :align: center
+
+
+
 Contents
 --------
 
