@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Usage &#8212; pyaescbc 0.0.1 documentation</title>
+    <title>Usage &#8212; pyaescbc 0.0.3 documentation</title>
   
   
   
@@ -38,7 +38,7 @@
   <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="_static/documentation_options.js?v=d45e8c67"></script>
+    <script src="_static/documentation_options.js?v=47de8214"></script>
     <script src="_static/doctools.js?v=9a2dae69"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'usage';</script>
@@ -109,7 +109,7 @@
   
   
   
-    <p class="title logo__title">pyaescbc 0.0.1 documentation</p>
+    <p class="title logo__title">pyaescbc 0.0.3 documentation</p>
   
 </a></div>
     
@@ -321,6 +321,64 @@
                   
   <section id="usage">
 <h1>Usage<a class="headerlink" href="#usage" title="Link to this heading">#</a></h1>
+<section id="package-usage">
+<h2>Package usage<a class="headerlink" href="#package-usage" title="Link to this heading">#</a></h2>
+<p>To encrypt a message, use the following code, available in the <cite>examples</cite> directory of the package:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pyaescbc</span>
+
+<span class="c1"># Encryption</span>
+<span class="n">cleardata</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">(</span><span class="s2">&quot;Hello, World!&quot;</span><span class="p">,</span> <span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+<span class="n">pin</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">(</span><span class="s2">&quot;1234&quot;</span><span class="p">,</span> <span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+<span class="n">password</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">(</span><span class="s2">&quot;password&quot;</span><span class="p">,</span> <span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+<span class="n">iterations</span> <span class="o">=</span> <span class="n">pyaescbc</span><span class="o">.</span><span class="n">generate_pin_iterations</span><span class="p">(</span><span class="n">pin</span><span class="p">,</span> <span class="n">delete_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">encrypted_bundle</span> <span class="o">=</span> <span class="n">pyaescbc</span><span class="o">.</span><span class="n">encrypt</span><span class="p">(</span><span class="n">cleardata</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="n">iterations</span><span class="p">,</span> <span class="n">delete_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Decryption</span>
+<span class="n">pin</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">(</span><span class="s2">&quot;1234&quot;</span><span class="p">,</span> <span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+<span class="n">password</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">(</span><span class="s2">&quot;password&quot;</span><span class="p">,</span> <span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+<span class="n">iterations</span> <span class="o">=</span> <span class="n">pyaescbc</span><span class="o">.</span><span class="n">generate_pin_iterations</span><span class="p">(</span><span class="n">pin</span><span class="p">,</span> <span class="n">delete_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">decrypted_data</span> <span class="o">=</span> <span class="n">pyaescbc</span><span class="o">.</span><span class="n">decrypt</span><span class="p">(</span><span class="n">encrypted_bundle</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="n">iterations</span><span class="p">,</span> <span class="n">delete_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">decrypted_data</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The iteration can also be generated randomly, using <a class="reference internal" href="api.html#pyaescbc.generate_random_iterations" title="pyaescbc.generate_random_iterations"><code class="xref py py-func docutils literal notranslate"><span class="pre">pyaescbc.generate_random_iterations()</span></code></a>.</p>
+</section>
+<section id="type-convertion">
+<h2>Type convertion<a class="headerlink" href="#type-convertion" title="Link to this heading">#</a></h2>
+<p>If your clear data is a string, you can convert them to bytearray using the following code:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Convert a string to bytearray</span>
+<span class="n">string</span> <span class="o">=</span> <span class="s2">&quot;Hello, World!&quot;</span>
+<span class="n">byte_array</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">(</span><span class="n">string</span><span class="p">,</span> <span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Similarly, afetr decrypting, you can convert the bytearray back to a string using the following code:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Convert a bytearray to string</span>
+<span class="n">decrypted_string</span> <span class="o">=</span> <span class="n">byte_array</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">decrypted_string</span><span class="p">)</span>  <span class="c1"># Output: Hello, World!</span>
+</pre></div>
+</div>
+<p>For encrypted data (ie the <code class="docutils literal notranslate"><span class="pre">encrypted_bundle</span></code>), the type is a bytearray but it can’t be converted to a string using <code class="docutils literal notranslate"><span class="pre">utf-8</span></code>.
+This is because the encrypted data is not a valid UTF-8 string.</p>
+<p>I recommend to save the encrypted data in a file or a database as a bytearray, and then read it back as a bytearray when you need to decrypt it.</p>
+<p>Otherwise, you can convert the bytearray to a base64 string using the following code:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">base64</span>
+
+<span class="c1"># Convert bytearray to base64 string</span>
+<span class="n">encrypted_bundle</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;</span><span class="se">\x00\x01\x02\x03</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="n">base64_string</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">encrypted_bundle</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">base64_string</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The base64 string can be saved in a file or a database as a string, and then read it back as a base64 string when you need to decrypt it.
+To reconvert the base64 string to a bytearray, you can use the following code:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Convert base64 string to bytearray</span>
+<span class="n">base64_string</span> <span class="o">=</span> <span class="s2">&quot;AAECAw==&quot;</span>
+<span class="n">encrypted_bundle</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">(</span><span class="n">base64</span><span class="o">.</span><span class="n">b64decode</span><span class="p">(</span><span class="n">base64_string</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">encrypted_bundle</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
 </section>
 
 
@@ -352,6 +410,19 @@
                 <dialog id="pst-secondary-sidebar-modal"></dialog>
                 <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#package-usage">Package usage</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#type-convertion">Type convertion</a></li>
+</ul>
+  </nav></div>
 
   <div class="sidebar-secondary-item">
   <div role="note" aria-label="source link">
