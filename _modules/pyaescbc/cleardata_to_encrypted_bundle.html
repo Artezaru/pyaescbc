@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>pyaescbc.encrypted_bundle_to_cleardata &#8212; pyaescbc 0.0.4 documentation</title>
+    <title>pyaescbc.cleardata_to_encrypted_bundle &#8212; pyaescbc 0.0.4 documentation</title>
   
   
   
@@ -40,7 +40,7 @@
     <script src="../../_static/documentation_options.js?v=8c5712d9"></script>
     <script src="../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/pyaescbc/encrypted_bundle_to_cleardata';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/pyaescbc/cleardata_to_encrypted_bundle';</script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -292,7 +292,7 @@
     
     <li class="breadcrumb-item"><a href="../index.html" class="nav-link">Module code</a></li>
     
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">pyaescbc.encrypted_bundle_to_cleardata</span></li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">pyaescbc.cleardata_to_encrypted_bundle</span></li>
   </ul>
 </nav>
 </div>
@@ -309,126 +309,119 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <h1>Source code for pyaescbc.encrypted_bundle_to_cleardata</h1><div class="highlight"><pre>
+  <h1>Source code for pyaescbc.cleardata_to_encrypted_bundle</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span>
 
+<span class="kn">from</span><span class="w"> </span><span class="nn">.random_salt</span><span class="w"> </span><span class="kn">import</span> <span class="n">random_salt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.random_iv</span><span class="w"> </span><span class="kn">import</span> <span class="n">random_iv</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.derive_key</span><span class="w"> </span><span class="kn">import</span> <span class="n">derive_key</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">.decrypt_AES_CBC</span><span class="w"> </span><span class="kn">import</span> <span class="n">decrypt_AES_CBC</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">.extract_cryptography_components</span><span class="w"> </span><span class="kn">import</span> <span class="n">extract_cryptography_components</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">.check_hmac</span><span class="w"> </span><span class="kn">import</span> <span class="n">check_hmac</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.encrypt_AES_CBC</span><span class="w"> </span><span class="kn">import</span> <span class="n">encrypt_AES_CBC</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.create_hmac</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_hmac</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.create_encrypted_bundle</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_encrypted_bundle</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.delete_bytearray</span><span class="w"> </span><span class="kn">import</span> <span class="n">delete_bytearray</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">.auth_error</span><span class="w"> </span><span class="kn">import</span> <span class="n">AuthError</span>
 
-<div class="viewcode-block" id="encrypted_bundle_to_cleardata">
-<a class="viewcode-back" href="../../api.html#pyaescbc.encrypted_bundle_to_cleardata">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">encrypted_bundle_to_cleardata</span><span class="p">(</span>
-    <span class="n">encrypted_bundle</span><span class="p">:</span> <span class="nb">bytearray</span><span class="p">,</span>
+<div class="viewcode-block" id="cleardata_to_encrypted_bundle">
+<a class="viewcode-back" href="../../api.html#pyaescbc.cleardata_to_encrypted_bundle">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">cleardata_to_encrypted_bundle</span><span class="p">(</span>
+    <span class="n">cleardata</span><span class="p">:</span> <span class="nb">bytearray</span><span class="p">,</span> 
     <span class="n">password</span><span class="p">:</span> <span class="nb">bytearray</span><span class="p">,</span> 
     <span class="n">iterations</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
     <span class="n">authdata</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bytearray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">delete_keys</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytearray</span><span class="p">:</span> 
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    encrypted_bundle_to_cleardata decrypts the encrypted bundle to generate the cleardata.</span>
+<span class="sd">    cleardata_to_encrypted_bundle encrypts the clear data to generate the encrypted bundle.</span>
 
 <span class="sd">    The number of iterations can be generated using the function :func:`pyaescbc.generate_random_iterations` or :func:`pyaescbc.generate_pin_iterations`.</span>
 
 <span class="sd">    .. note::</span>
 <span class="sd">        </span>
-<span class="sd">        The encrypted_bundle, the password and the authdata are deleted from memory at the end of the function if delete_keys is True.</span>
+<span class="sd">        The cleardata, the password and the authdata are deleted from memory at the end of the function if delete_keys is True.</span>
 <span class="sd">        Otherwise, they need to be deleted after dealing with Exception.</span>
 
 <span class="sd">    .. note::</span>
 
-<span class="sd">        An alias for this function is ``decrypt``</span>
+<span class="sd">        An alias for this function is ``encrypt``</span>
 
 <span class="sd">        .. code-block:: python</span>
 
 <span class="sd">            import pyaescbc as aes</span>
 
-<span class="sd">            encrypted_bundle = bytearray(...) # The encrypted bundle</span>
-<span class="sd">            password = bytearray(..., &#39;utf-8&#39;) # The user password used to encrypt the cipherdata and create the bundle</span>
-<span class="sd">            iterations = ... # The number of iterations used to encrypt the cipherdata and create the bundle</span>
-<span class="sd">            cleardata = aes.decrypt(encrypted_bundle, password, iterations, delete_keys=True)</span>
-<span class="sd">            # Or use : cleardata = aes.encrypted_bundle_to_cleardata(encrypted_bundle, password, iterations, delete_keys=True)</span>
+<span class="sd">            cleardata = bytearray(&quot;Hello, World!&quot;, &#39;utf-8&#39;)</span>
+<span class="sd">            password = bytearray(&quot;password&quot;, &#39;utf-8&#39;)</span>
+<span class="sd">            iterations = aes.generate_random_iterations()</span>
+<span class="sd">            encrypted_bundle = aes.encrypt(cleardata, password, iterations, delete_keys=True)</span>
+<span class="sd">            # Or use : encrypted_bundle = aes.cleardata_to_encrypted_bundle(cleardata, password, iterations, delete_keys=True)</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    encrypted_bundle : bytearray</span>
-<span class="sd">        The encrypted bundle to decrypt using AES in CBC mode. Must contain at least 80 bytes.</span>
+<span class="sd">    cleardata : bytearray</span>
+<span class="sd">        The clear message to encrypt using AES in CBC mode.</span>
 
 <span class="sd">    password : bytearray</span>
 <span class="sd">        The user password. It must not be empty.</span>
 
 <span class="sd">    iterations : int</span>
 <span class="sd">        The number of iterations for PBKDF2. It must be a strictly positive integer.</span>
-<span class="sd">    </span>
+
 <span class="sd">    authdata : Optional[bytearray]</span>
 <span class="sd">        The authentication data to use in the HMAC. Default is None.</span>
-<span class="sd">        If not None, it will be used to create the HMAC.</span>
+<span class="sd">        If not None, it will be used to create the HMAC. </span>
 
 <span class="sd">    delete_keys : bool</span>
-<span class="sd">        Delete the encrypted_bundle, the password from memory at the end of the function. Default is True.</span>
+<span class="sd">        Delete the cleardata, the password and authdata from memory at the end of the function. Default is True.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    cleardata : bytearray</span>
-<span class="sd">        The decrypted message using AES in CBC mode.</span>
+<span class="sd">    encrypted_bundle : bytearray</span>
+<span class="sd">        The encrypted bundle. </span>
 
 <span class="sd">    Raises</span>
 <span class="sd">    ------</span>
 <span class="sd">    TypeError</span>
 <span class="sd">        If an argument is of the wrong type.</span>
 <span class="sd">    ValueError</span>
-<span class="sd">        If `password` is empty, `iterations` is not a strictly positive integer, or `encrypted_bundle` does not contain more than 80 bytes.</span>
+<span class="sd">        If password is empty or if iterations is not a strictly positive integer.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Check the types of the parameters</span>
-    <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">encrypted_bundle</span><span class="p">,</span> <span class="nb">bytearray</span><span class="p">))</span> <span class="ow">or</span> <span class="p">(</span><span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">password</span><span class="p">,</span> <span class="nb">bytearray</span><span class="p">)):</span>
-        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Parameters encrypted_bundle or password is not bytearray&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">cleardata</span><span class="p">,</span> <span class="nb">bytearray</span><span class="p">))</span> <span class="ow">or</span> <span class="p">(</span><span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">password</span><span class="p">,</span> <span class="nb">bytearray</span><span class="p">)):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Parameters cleardata or password is not bytearray&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">iterations</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Parameter iterations is not integer&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">authdata</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">authdata</span><span class="p">,</span> <span class="nb">bytearray</span><span class="p">)):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Parameter authdata is not bytearray&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">delete_keys</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Parameter delete_keys is not a boolean.&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Parameter delete_keys is not a boolean.&quot;</span><span class="p">)</span>
 
-    <span class="c1"># Check the values of the parameters</span>
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">password</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Parameter password must not be empty.&#39;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">iterations</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Parameter iterations must be a positive integer.&#39;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">encrypted_bundle</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">80</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;encrypted_bundle does not contain more than 80 bytes.&#39;</span><span class="p">)</span>
-
-    <span class="c1"># Decryption</span>
+    <span class="c1"># Encryption</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="n">iv</span><span class="p">,</span> <span class="n">salt</span><span class="p">,</span> <span class="n">expected_hmac</span><span class="p">,</span> <span class="n">cipherdata</span> <span class="o">=</span> <span class="n">extract_cryptography_components</span><span class="p">(</span><span class="n">encrypted_bundle</span><span class="p">)</span>
+        <span class="n">salt</span> <span class="o">=</span> <span class="n">random_salt</span><span class="p">()</span>
+        <span class="n">iv</span> <span class="o">=</span> <span class="n">random_iv</span><span class="p">()</span>
         <span class="n">derived_key</span> <span class="o">=</span> <span class="n">derive_key</span><span class="p">(</span><span class="n">password</span><span class="p">,</span> <span class="n">salt</span><span class="p">,</span> <span class="n">iterations</span><span class="p">)</span>
         <span class="n">aes_key</span> <span class="o">=</span> <span class="n">derived_key</span><span class="p">[:</span><span class="mi">32</span><span class="p">]</span>  <span class="c1"># AES key is the first 32 bytes of the derived key</span>
         <span class="n">hmac_key</span> <span class="o">=</span> <span class="n">derived_key</span><span class="p">[</span><span class="mi">32</span><span class="p">:]</span>  <span class="c1"># HMAC key is the last 32 bytes of the derived key</span>
-        <span class="n">given_hmac</span> <span class="o">=</span> <span class="n">create_hmac</span><span class="p">(</span><span class="n">hmac_key</span><span class="p">,</span> <span class="n">iv</span><span class="p">,</span> <span class="n">cipherdata</span><span class="p">,</span> <span class="n">authdata</span><span class="o">=</span><span class="n">authdata</span><span class="p">)</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">check_hmac</span><span class="p">(</span><span class="n">given_hmac</span><span class="p">,</span> <span class="n">expected_hmac</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="n">AuthError</span><span class="p">(</span><span class="s1">&#39;The HMAC is not valid. The data has been tampered with or the password is incorrect.&#39;</span><span class="p">)</span>
-        <span class="n">cleardata</span> <span class="o">=</span> <span class="n">decrypt_AES_CBC</span><span class="p">(</span><span class="n">cipherdata</span><span class="p">,</span> <span class="n">aes_key</span><span class="p">,</span> <span class="n">iv</span><span class="p">)</span>
+        <span class="n">cipherdata</span> <span class="o">=</span> <span class="n">encrypt_AES_CBC</span><span class="p">(</span><span class="n">cleardata</span><span class="p">,</span> <span class="n">aes_key</span><span class="p">,</span> <span class="n">iv</span><span class="p">)</span>
+        <span class="n">expected_hmac</span> <span class="o">=</span> <span class="n">create_hmac</span><span class="p">(</span><span class="n">hmac_key</span><span class="p">,</span> <span class="n">iv</span><span class="p">,</span> <span class="n">cipherdata</span><span class="p">,</span> <span class="n">authdata</span><span class="o">=</span><span class="n">authdata</span><span class="p">)</span>
+        <span class="n">encrypted_bundle</span> <span class="o">=</span> <span class="n">create_encrypted_bundle</span><span class="p">(</span><span class="n">iv</span><span class="p">,</span> <span class="n">salt</span><span class="p">,</span> <span class="n">expected_hmac</span><span class="p">,</span> <span class="n">cipherdata</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
         <span class="k">raise</span> <span class="n">e</span>
     <span class="k">finally</span><span class="p">:</span>
         <span class="c1"># Deleting from memory all critical data for security (in the order of their creation to avoid memory leaks)</span>
         <span class="k">if</span> <span class="n">delete_keys</span><span class="p">:</span>
-            <span class="n">delete_bytearray</span><span class="p">(</span><span class="n">encrypted_bundle</span><span class="p">)</span>
+            <span class="n">delete_bytearray</span><span class="p">(</span><span class="n">cleardata</span><span class="p">)</span>
             <span class="n">delete_bytearray</span><span class="p">(</span><span class="n">password</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">authdata</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">delete_bytearray</span><span class="p">(</span><span class="n">authdata</span><span class="p">)</span>
-        <span class="n">delete_bytearray</span><span class="p">(</span><span class="n">iv</span><span class="p">)</span>
         <span class="n">delete_bytearray</span><span class="p">(</span><span class="n">salt</span><span class="p">)</span>
-        <span class="n">delete_bytearray</span><span class="p">(</span><span class="n">expected_hmac</span><span class="p">)</span>
-        <span class="n">delete_bytearray</span><span class="p">(</span><span class="n">cipherdata</span><span class="p">)</span>
+        <span class="n">delete_bytearray</span><span class="p">(</span><span class="n">iv</span><span class="p">)</span>
         <span class="n">delete_bytearray</span><span class="p">(</span><span class="n">derived_key</span><span class="p">)</span>
         <span class="n">delete_bytearray</span><span class="p">(</span><span class="n">aes_key</span><span class="p">)</span>
         <span class="n">delete_bytearray</span><span class="p">(</span><span class="n">hmac_key</span><span class="p">)</span>
-        <span class="n">delete_bytearray</span><span class="p">(</span><span class="n">given_hmac</span><span class="p">)</span>
-        
-    <span class="c1"># Return the decrypted data</span>
-    <span class="k">return</span> <span class="n">cleardata</span></div>
+        <span class="n">delete_bytearray</span><span class="p">(</span><span class="n">cipherdata</span><span class="p">)</span>
+        <span class="n">delete_bytearray</span><span class="p">(</span><span class="n">expected_hmac</span><span class="p">)</span>
+
+    <span class="c1"># Return the encrypted bundle</span>
+    <span class="k">return</span> <span class="n">encrypted_bundle</span></div>
 
 </pre></div>
 

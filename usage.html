@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Usage &#8212; pyaescbc 0.0.3 documentation</title>
+    <title>Usage &#8212; pyaescbc 0.0.4 documentation</title>
   
   
   
@@ -38,7 +38,7 @@
   <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="_static/documentation_options.js?v=47de8214"></script>
+    <script src="_static/documentation_options.js?v=8c5712d9"></script>
     <script src="_static/doctools.js?v=9a2dae69"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'usage';</script>
@@ -109,7 +109,7 @@
   
   
   
-    <p class="title logo__title">pyaescbc 0.0.3 documentation</p>
+    <p class="title logo__title">pyaescbc 0.0.4 documentation</p>
   
 </a></div>
     
@@ -331,13 +331,15 @@
 <span class="n">pin</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">(</span><span class="s2">&quot;1234&quot;</span><span class="p">,</span> <span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
 <span class="n">password</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">(</span><span class="s2">&quot;password&quot;</span><span class="p">,</span> <span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
 <span class="n">iterations</span> <span class="o">=</span> <span class="n">pyaescbc</span><span class="o">.</span><span class="n">generate_pin_iterations</span><span class="p">(</span><span class="n">pin</span><span class="p">,</span> <span class="n">delete_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">encrypted_bundle</span> <span class="o">=</span> <span class="n">pyaescbc</span><span class="o">.</span><span class="n">encrypt</span><span class="p">(</span><span class="n">cleardata</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="n">iterations</span><span class="p">,</span> <span class="n">delete_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">authdata</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">(</span><span class="s2">&quot;user=toto&quot;</span><span class="p">,</span> <span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="c1"># Optional authentication data (can be None)</span>
+<span class="n">encrypted_bundle</span> <span class="o">=</span> <span class="n">pyaescbc</span><span class="o">.</span><span class="n">encrypt</span><span class="p">(</span><span class="n">cleardata</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="n">iterations</span><span class="p">,</span> <span class="n">authdata</span><span class="o">=</span><span class="n">authdata</span><span class="p">,</span> <span class="n">delete_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
 <span class="c1"># Decryption</span>
 <span class="n">pin</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">(</span><span class="s2">&quot;1234&quot;</span><span class="p">,</span> <span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
 <span class="n">password</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">(</span><span class="s2">&quot;password&quot;</span><span class="p">,</span> <span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
 <span class="n">iterations</span> <span class="o">=</span> <span class="n">pyaescbc</span><span class="o">.</span><span class="n">generate_pin_iterations</span><span class="p">(</span><span class="n">pin</span><span class="p">,</span> <span class="n">delete_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">decrypted_data</span> <span class="o">=</span> <span class="n">pyaescbc</span><span class="o">.</span><span class="n">decrypt</span><span class="p">(</span><span class="n">encrypted_bundle</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="n">iterations</span><span class="p">,</span> <span class="n">delete_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">authdata</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">(</span><span class="s2">&quot;user=toto&quot;</span><span class="p">,</span> <span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="c1"># Optional authentication data (can be None)</span>
+<span class="n">decrypted_data</span> <span class="o">=</span> <span class="n">pyaescbc</span><span class="o">.</span><span class="n">decrypt</span><span class="p">(</span><span class="n">encrypted_bundle</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="n">iterations</span><span class="p">,</span> <span class="n">authdata</span><span class="o">=</span><span class="n">authdata</span><span class="p">,</span> <span class="n">delete_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="n">decrypted_data</span><span class="p">)</span>
 </pre></div>
@@ -352,7 +354,7 @@
 <span class="n">byte_array</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">(</span><span class="n">string</span><span class="p">,</span> <span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Similarly, afetr decrypting, you can convert the bytearray back to a string using the following code:</p>
+<p>Similarly, after decrypting, you can convert the bytearray back to a string using the following code:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Convert a bytearray to string</span>
 <span class="n">decrypted_string</span> <span class="o">=</span> <span class="n">byte_array</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">decrypted_string</span><span class="p">)</span>  <span class="c1"># Output: Hello, World!</span>

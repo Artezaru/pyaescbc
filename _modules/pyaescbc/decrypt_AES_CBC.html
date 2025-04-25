@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>pyaescbc.decrypt_AES_CBC &#8212; pyaescbc 0.0.3 documentation</title>
+    <title>pyaescbc.decrypt_AES_CBC &#8212; pyaescbc 0.0.4 documentation</title>
   
   
   
@@ -37,7 +37,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../../_static/documentation_options.js?v=47de8214"></script>
+    <script src="../../_static/documentation_options.js?v=8c5712d9"></script>
     <script src="../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/pyaescbc/decrypt_AES_CBC';</script>
@@ -107,7 +107,7 @@
   
   
   
-    <p class="title logo__title">pyaescbc 0.0.3 documentation</p>
+    <p class="title logo__title">pyaescbc 0.0.4 documentation</p>
   
 </a></div>
     
@@ -315,31 +315,31 @@
 
 <div class="viewcode-block" id="decrypt_AES_CBC">
 <a class="viewcode-back" href="../../api.html#pyaescbc.decrypt_AES_CBC">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">decrypt_AES_CBC</span><span class="p">(</span><span class="n">cipherdata</span><span class="p">:</span> <span class="nb">bytearray</span><span class="p">,</span> <span class="n">derived_key</span><span class="p">:</span> <span class="nb">bytearray</span><span class="p">,</span> <span class="n">iv</span><span class="p">:</span> <span class="nb">bytearray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytearray</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">decrypt_AES_CBC</span><span class="p">(</span><span class="n">cipherdata</span><span class="p">:</span> <span class="nb">bytearray</span><span class="p">,</span> <span class="n">aes_key</span><span class="p">:</span> <span class="nb">bytearray</span><span class="p">,</span> <span class="n">iv</span><span class="p">:</span> <span class="nb">bytearray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytearray</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Decrypts a cipherdata message using AES in CBC mode.</span>
 
 <span class="sd">    The data is unpadded using PKCS7 padding and then decrypted using AES in CBC mode.</span>
-<span class="sd">    The derived key is composed of the AES key and the HMAC key, both 32 bytes long.</span>
+<span class="sd">    The aes_key is the first 32 bytes of the derived key, and the iv is the initialization vector.</span>
 
 <span class="sd">    .. seealso::</span>
+
 <span class="sd">        function :func:`pyaescbc.derive_key` to create the derived key.</span>
 
 <span class="sd">    .. note::</span>
-<span class="sd">        The cipherdata, derived_key and iv must be bytearrays.</span>
+
+<span class="sd">        The cipherdata, aes_key and iv must be bytearrays.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    cipherdata : bytearray</span>
 <span class="sd">        The encrypted message to decrypt using AES in CBC mode.</span>
 
-<span class="sd">    derived_key : bytearray</span>
-<span class="sd">        The 64-byte derived key extracted from the password and salt.</span>
-<span class="sd">        The first 32 bytes are the AES key.</span>
+<span class="sd">    aes_key : bytearray</span>
+<span class="sd">        The 32-byte AES key derived from the password, salt and iterations.</span>
 
 <span class="sd">    iv : bytearray</span>
-<span class="sd">        The initialization vector (IV) to use in AES-CBC mode.</span>
-<span class="sd">        Must be 16 bytes long.</span>
+<span class="sd">        The 16-byte initialization vector (IV) to use in AES-CBC mode.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -351,21 +351,24 @@
 <span class="sd">    TypeError</span>
 <span class="sd">        If a given argument is not a `bytearray` instance.</span>
 <span class="sd">    ValueError</span>
-<span class="sd">        If the `derived_key` isn&#39;t 64 bytes long or the `iv` isn&#39;t 16 bytes long.</span>
+<span class="sd">        If the `aes_key` isn&#39;t 32 bytes long or the `iv` isn&#39;t 16 bytes long.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Check the types of the parameters</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">cipherdata</span><span class="p">,</span> <span class="nb">bytearray</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Parameter cipherdata is not bytearray instance.&#39;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">derived_key</span><span class="p">,</span> <span class="nb">bytearray</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Parameter derived_key is not bytearray instance.&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">aes_key</span><span class="p">,</span> <span class="nb">bytearray</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Parameter aes_key is not bytearray instance.&#39;</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">iv</span><span class="p">,</span> <span class="nb">bytearray</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Parameter iv is not bytearray instance.&#39;</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">derived_key</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">64</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">derived_key</span><span class="si">=}</span><span class="s1"> is not 64 bytes long.&#39;</span><span class="p">)</span> 
+    <span class="c1"># Check the values of the parameters</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">aes_key</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">32</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">aes_key</span><span class="si">=}</span><span class="s1"> is not 64 bytes long.&#39;</span><span class="p">)</span> 
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">iv</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">16</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">iv</span><span class="si">=}</span><span class="s1"> is not 16 bytes long.&#39;</span><span class="p">)</span>
     
-    <span class="n">cipher</span> <span class="o">=</span> <span class="n">ciphers</span><span class="o">.</span><span class="n">Cipher</span><span class="p">(</span><span class="n">ciphers</span><span class="o">.</span><span class="n">algorithms</span><span class="o">.</span><span class="n">AES</span><span class="p">(</span><span class="n">derived_key</span><span class="p">[:</span><span class="mi">32</span><span class="p">]),</span> <span class="n">ciphers</span><span class="o">.</span><span class="n">modes</span><span class="o">.</span><span class="n">CBC</span><span class="p">(</span><span class="n">iv</span><span class="p">),</span> <span class="n">backend</span><span class="o">=</span><span class="n">default_backend</span><span class="p">())</span>
+    <span class="c1"># Decrypt the data using AES in CBC mode</span>
+    <span class="n">cipher</span> <span class="o">=</span> <span class="n">ciphers</span><span class="o">.</span><span class="n">Cipher</span><span class="p">(</span><span class="n">ciphers</span><span class="o">.</span><span class="n">algorithms</span><span class="o">.</span><span class="n">AES</span><span class="p">(</span><span class="n">aes_key</span><span class="p">),</span> <span class="n">ciphers</span><span class="o">.</span><span class="n">modes</span><span class="o">.</span><span class="n">CBC</span><span class="p">(</span><span class="n">iv</span><span class="p">),</span> <span class="n">backend</span><span class="o">=</span><span class="n">default_backend</span><span class="p">())</span>
     <span class="n">decryptor</span> <span class="o">=</span> <span class="n">cipher</span><span class="o">.</span><span class="n">decryptor</span><span class="p">()</span>
     <span class="n">unpadder</span> <span class="o">=</span> <span class="n">padding</span><span class="o">.</span><span class="n">PKCS7</span><span class="p">(</span><span class="mi">128</span><span class="p">)</span><span class="o">.</span><span class="n">unpadder</span><span class="p">()</span>  
     <span class="n">decrypted_data</span> <span class="o">=</span> <span class="n">decryptor</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">cipherdata</span><span class="p">)</span> <span class="o">+</span> <span class="n">decryptor</span><span class="o">.</span><span class="n">finalize</span><span class="p">()</span> 

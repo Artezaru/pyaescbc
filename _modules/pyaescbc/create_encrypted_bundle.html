@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>pyaescbc.create_encrypted_bundle &#8212; pyaescbc 0.0.3 documentation</title>
+    <title>pyaescbc.create_encrypted_bundle &#8212; pyaescbc 0.0.4 documentation</title>
   
   
   
@@ -37,7 +37,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../../_static/documentation_options.js?v=47de8214"></script>
+    <script src="../../_static/documentation_options.js?v=8c5712d9"></script>
     <script src="../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/pyaescbc/create_encrypted_bundle';</script>
@@ -107,7 +107,7 @@
   
   
   
-    <p class="title logo__title">pyaescbc 0.0.3 documentation</p>
+    <p class="title logo__title">pyaescbc 0.0.4 documentation</p>
   
 </a></div>
     
@@ -318,6 +318,10 @@
 
 <span class="sd">    The encrypted bundle is composed by the initialization vector (IV), the salt, the expected HMAC and the cipherdata.</span>
 
+<span class="sd">    .. seealso::</span>
+
+<span class="sd">        - function :func:`pyaescbc.extract_cryptography_components` to extract the components from the encrypted bundle.</span>
+
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    iv : bytearray</span>
@@ -344,6 +348,7 @@
 <span class="sd">    ValueError</span>
 <span class="sd">        If any of the components (salt, iv, hmac) are not the correct length.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Check the types of the parameters</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">iv</span><span class="p">,</span> <span class="nb">bytearray</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Parameter iv is not bytearray instance.&#39;</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">salt</span><span class="p">,</span> <span class="nb">bytearray</span><span class="p">):</span>
@@ -353,6 +358,7 @@
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">cipherdata</span><span class="p">,</span> <span class="nb">bytearray</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Parameter cipherdata is not bytearray instance.&#39;</span><span class="p">)</span>
     
+    <span class="c1"># Check the values of the parameters</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">iv</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">16</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">iv</span><span class="si">=}</span><span class="s1"> is not 16 bytes long.&#39;</span><span class="p">)</span> 
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">salt</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">32</span><span class="p">:</span>
@@ -360,6 +366,7 @@
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">expected_hmac</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">32</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">expected_hmac</span><span class="si">=}</span><span class="s1"> is not 32 bytes long.&#39;</span><span class="p">)</span>
 
+    <span class="c1"># Create the encrypted bundle</span>
     <span class="k">return</span> <span class="n">iv</span> <span class="o">+</span> <span class="n">salt</span> <span class="o">+</span> <span class="n">expected_hmac</span> <span class="o">+</span> <span class="n">cipherdata</span></div>
 
 </pre></div>

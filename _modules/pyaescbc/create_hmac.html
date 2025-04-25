@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>pyaescbc.create_hmac &#8212; pyaescbc 0.0.3 documentation</title>
+    <title>pyaescbc.create_hmac &#8212; pyaescbc 0.0.4 documentation</title>
   
   
   
@@ -37,7 +37,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../../_static/documentation_options.js?v=47de8214"></script>
+    <script src="../../_static/documentation_options.js?v=8c5712d9"></script>
     <script src="../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/pyaescbc/create_hmac';</script>
@@ -107,7 +107,7 @@
   
   
   
-    <p class="title logo__title">pyaescbc 0.0.3 documentation</p>
+    <p class="title logo__title">pyaescbc 0.0.4 documentation</p>
   
 </a></div>
     
@@ -312,15 +312,19 @@
   <h1>Source code for pyaescbc.create_hmac</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span><span class="w"> </span><span class="nn">hmac</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">hashlib</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">.delete_bytearray</span><span class="w"> </span><span class="kn">import</span> <span class="n">delete_bytearray</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span>
 
 <div class="viewcode-block" id="create_hmac">
 <a class="viewcode-back" href="../../api.html#pyaescbc.create_hmac">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">create_hmac</span><span class="p">(</span><span class="n">derived_key</span><span class="p">:</span> <span class="nb">bytearray</span><span class="p">,</span> <span class="n">iv</span><span class="p">:</span> <span class="nb">bytearray</span><span class="p">,</span> <span class="n">cipherdata</span><span class="p">:</span> <span class="nb">bytearray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytearray</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">create_hmac</span><span class="p">(</span><span class="n">hmac_key</span><span class="p">:</span> <span class="nb">bytearray</span><span class="p">,</span> <span class="n">iv</span><span class="p">:</span> <span class="nb">bytearray</span><span class="p">,</span> <span class="n">cipherdata</span><span class="p">:</span> <span class="nb">bytearray</span><span class="p">,</span> <span class="n">authdata</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bytearray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytearray</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Creates the expected HMAC value from the derived key, IV, and cipherdata.</span>
+<span class="sd">    Creates the expected HMAC using the hmac_key on the iv, cipherdata, and optional auth_data.</span>
+<span class="sd">    The HMAC is created using the SHA-256 hash function. The HMAC is used to verify the integrity of the encrypted message.</span>
+<span class="sd">    The hmac_key is extracted from the derived key, which is created using PBKDF2HMAC.</span>
 
-<span class="sd">    The HMAC allows the receiver to verify the integrity of the encrypted message.</span>
+<span class="sd">    .. code-block:: console</span>
+
+<span class="sd">        HMAC = HMAC(key, SHA256(iv + cipherdata + authdata))</span>
 
 <span class="sd">    .. seealso::</span>
 
@@ -328,14 +332,17 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    derived_key : bytearray</span>
-<span class="sd">        The 64-byte derived key.</span>
+<span class="sd">    hmac_key : bytearray</span>
+<span class="sd">        The 32-byte long key used to create the HMAC. It is extracted from the derived key.</span>
 
 <span class="sd">    iv : bytearray</span>
 <span class="sd">        The 16-byte long initialization vector used for encryption.</span>
 
 <span class="sd">    cipherdata : bytearray</span>
 <span class="sd">        The encrypted message.</span>
+
+<span class="sd">    authdata : Optional[bytearray]</span>
+<span class="sd">        Optional additional authentication data. If provided, it is prepended to the HMAC input.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -348,24 +355,29 @@
 <span class="sd">        If any argument is not a `bytearray` instance.</span>
 
 <span class="sd">    ValueError</span>
-<span class="sd">        If the derived key isn&#39;t 64 bytes or the IV isn&#39;t 16 bytes.</span>
+<span class="sd">        If the hmac_key isn&#39;t 32 bytes, the IV isn&#39;t 16 bytes.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">derived_key</span><span class="p">,</span> <span class="nb">bytearray</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Parameter derived_key is not bytearray instance.&#39;</span><span class="p">)</span>
+    <span class="c1"># Check the types of the parameters</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">hmac_key</span><span class="p">,</span> <span class="nb">bytearray</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Parameter hmac_key is not bytearray instance.&#39;</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">iv</span><span class="p">,</span> <span class="nb">bytearray</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Parameter iv is not bytearray instance.&#39;</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">cipherdata</span><span class="p">,</span> <span class="nb">bytearray</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Parameter cipherdata is not bytearray instance.&#39;</span><span class="p">)</span>
-        
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">derived_key</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">64</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">derived_key</span><span class="si">=}</span><span class="s1"> is not 64 bytes long.&#39;</span><span class="p">)</span> 
+    <span class="k">if</span> <span class="n">authdata</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">authdata</span><span class="p">,</span> <span class="nb">bytearray</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Parameter authdata is not bytearray instance.&#39;</span><span class="p">)</span>
+    
+    <span class="c1"># Check the value of the parameters</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">hmac_key</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">32</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">hmac_key</span><span class="si">=}</span><span class="s1"> is not 32 bytes long.&#39;</span><span class="p">)</span> 
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">iv</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">16</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">iv</span><span class="si">=}</span><span class="s1"> is not 16 bytes long.&#39;</span><span class="p">)</span>
 
-    <span class="n">hmac_key</span> <span class="o">=</span> <span class="n">derived_key</span><span class="p">[</span><span class="mi">32</span><span class="p">:]</span>
-    <span class="n">expected_hmac</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">(</span><span class="n">hmac</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">hmac_key</span><span class="p">,</span> <span class="n">iv</span> <span class="o">+</span> <span class="n">cipherdata</span><span class="p">,</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span><span class="p">)</span><span class="o">.</span><span class="n">digest</span><span class="p">())</span>
-    <span class="c1"># Securely delete the hmac_key</span>
-    <span class="n">delete_bytearray</span><span class="p">(</span><span class="n">hmac_key</span><span class="p">)</span>
+    <span class="c1"># Create the HMAC</span>
+    <span class="k">if</span> <span class="n">authdata</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">authdata</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">()</span>
+    <span class="n">expected_hmac</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">(</span><span class="n">hmac</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">hmac_key</span><span class="p">,</span> <span class="n">iv</span> <span class="o">+</span> <span class="n">cipherdata</span> <span class="o">+</span> <span class="n">authdata</span><span class="p">,</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span><span class="p">)</span><span class="o">.</span><span class="n">digest</span><span class="p">())</span>
+
     <span class="k">return</span> <span class="n">expected_hmac</span></div>
 
 </pre></div>

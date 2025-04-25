@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>pyaescbc.verify_key &#8212; pyaescbc 0.0.3 documentation</title>
+    <title>pyaescbc.random_salt &#8212; pyaescbc 0.0.4 documentation</title>
   
   
   
@@ -37,10 +37,10 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../../_static/documentation_options.js?v=47de8214"></script>
+    <script src="../../_static/documentation_options.js?v=8c5712d9"></script>
     <script src="../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/pyaescbc/verify_key';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/pyaescbc/random_salt';</script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -107,7 +107,7 @@
   
   
   
-    <p class="title logo__title">pyaescbc 0.0.3 documentation</p>
+    <p class="title logo__title">pyaescbc 0.0.4 documentation</p>
   
 </a></div>
     
@@ -292,7 +292,7 @@
     
     <li class="breadcrumb-item"><a href="../index.html" class="nav-link">Module code</a></li>
     
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">pyaescbc.verify_key</span></li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">pyaescbc.random_salt</span></li>
   </ul>
 </nav>
 </div>
@@ -309,59 +309,21 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <h1>Source code for pyaescbc.verify_key</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">hmac</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">hashlib</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">.delete_bytearray</span><span class="w"> </span><span class="kn">import</span> <span class="n">delete_bytearray</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">.create_hmac</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_hmac</span>
+  <h1>Source code for pyaescbc.random_salt</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">.random_bytearray</span><span class="w"> </span><span class="kn">import</span> <span class="n">random_bytearray</span>
 
-<div class="viewcode-block" id="verify_key">
-<a class="viewcode-back" href="../../api.html#pyaescbc.verify_key">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">verify_key</span><span class="p">(</span><span class="n">derived_key</span><span class="p">:</span> <span class="nb">bytearray</span><span class="p">,</span> <span class="n">iv</span><span class="p">:</span> <span class="nb">bytearray</span><span class="p">,</span> <span class="n">cipherdata</span><span class="p">:</span> <span class="nb">bytearray</span><span class="p">,</span> <span class="n">expected_hmac</span><span class="p">:</span> <span class="nb">bytearray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="viewcode-block" id="random_salt">
+<a class="viewcode-back" href="../../api.html#pyaescbc.random_salt">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">random_salt</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bytearray</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Verifies if the derived 64-byte key matches the expected HMAC.</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    derived_key : bytearray</span>
-<span class="sd">        The 64-byte derived key.</span>
-
-<span class="sd">    iv : bytearray</span>
-<span class="sd">        The 16-byte long initialization vector used for encryption.</span>
-
-<span class="sd">    cipherdata : bytearray</span>
-<span class="sd">        The encrypted message.</span>
-
-<span class="sd">    expected_hmac : bytearray</span>
-<span class="sd">        The expected 32-byte HMAC value.</span>
+<span class="sd">    Generates a random 32-byte salt for cryptographic purposes.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    bool</span>
-<span class="sd">        True if the derived key matches the HMAC, False otherwise.</span>
-
-<span class="sd">    Raises</span>
-<span class="sd">    ------</span>
-<span class="sd">    TypeError</span>
-<span class="sd">        If any argument is not a `bytearray` instance.</span>
-
-<span class="sd">    ValueError</span>
-<span class="sd">        If the derived key isn&#39;t 64 bytes, the IV isn&#39;t 16 bytes, or the HMAC isn&#39;t 32 bytes.</span>
+<span class="sd">    salt : bytearray</span>
+<span class="sd">        A random 32-byte bytearray to be used as a salt.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">expected_hmac</span><span class="p">,</span> <span class="nb">bytearray</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Parameter expected_hmac is not bytearray instance.&#39;</span><span class="p">)</span>
-
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">expected_hmac</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">32</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">expected_hmac</span><span class="si">=}</span><span class="s1"> is not 32 bytes long.&#39;</span><span class="p">)</span>
-    
-    <span class="n">hmac_value</span> <span class="o">=</span> <span class="n">create_hmac</span><span class="p">(</span><span class="n">derived_key</span><span class="p">,</span> <span class="n">iv</span><span class="p">,</span> <span class="n">cipherdata</span><span class="p">)</span>
-    <span class="c1"># Compare the computed HMAC with the expected one</span>
-    <span class="n">check</span> <span class="o">=</span> <span class="n">hmac</span><span class="o">.</span><span class="n">compare_digest</span><span class="p">(</span><span class="n">expected_hmac</span><span class="p">,</span> <span class="n">hmac_value</span><span class="p">)</span>
-    
-    <span class="c1"># Securely delete the HMAC-related variables</span>
-    <span class="n">delete_bytearray</span><span class="p">(</span><span class="n">hmac_value</span><span class="p">)</span>
-    
-    <span class="k">return</span> <span class="n">check</span></div>
+    <span class="k">return</span> <span class="n">random_bytearray</span><span class="p">(</span><span class="mi">32</span><span class="p">)</span></div>
 
 </pre></div>
 

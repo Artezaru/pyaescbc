@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>pyaescbc.delete_bytearray &#8212; pyaescbc 0.0.3 documentation</title>
+    <title>pyaescbc.delete_bytearray &#8212; pyaescbc 0.0.4 documentation</title>
   
   
   
@@ -37,7 +37,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../../_static/documentation_options.js?v=47de8214"></script>
+    <script src="../../_static/documentation_options.js?v=8c5712d9"></script>
     <script src="../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/pyaescbc/delete_bytearray';</script>
@@ -107,7 +107,7 @@
   
   
   
-    <p class="title logo__title">pyaescbc 0.0.3 documentation</p>
+    <p class="title logo__title">pyaescbc 0.0.4 documentation</p>
   
 </a></div>
     
@@ -315,8 +315,19 @@
 <div class="viewcode-block" id="delete_bytearray">
 <a class="viewcode-back" href="../../api.html#pyaescbc.delete_bytearray">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">delete_bytearray</span><span class="p">(</span><span class="n">barray</span><span class="p">:</span> <span class="nb">bytearray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Securely overwrites the contents of a bytearray and deletes the object from memory.</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        import pyaescbc as aes</span>
+<span class="sd">        import os</span>
+
+<span class="sd">        # Create a bytearray</span>
+<span class="sd">        barray = bytearray(os.urandom(32))  # Example: 32 random bytes</span>
+
+<span class="sd">        # Securely delete the bytearray</span>
+<span class="sd">        aes.delete_bytearray(barray)</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -328,9 +339,11 @@
 <span class="sd">    TypeError</span>
 <span class="sd">        If the given argument is not a `bytearray` instance.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Check if the input is a bytearray</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">barray</span><span class="p">,</span> <span class="nb">bytearray</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Parameter barray is not bytearray instance.&#39;</span><span class="p">)</span>
     
+    <span class="c1"># Delete the bytearray by overwriting its contents with random data</span>
     <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">barray</span><span class="p">)):</span>
         <span class="n">barray</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">urandom</span><span class="p">(</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># Overwrite with random data</span>
     <span class="n">barray</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>  <span class="c1"># Clear contents</span></div>

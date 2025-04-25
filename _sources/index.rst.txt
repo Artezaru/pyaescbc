@@ -16,7 +16,10 @@ The encryption process is designed as follow :
 .. image:: ../../pyaescbc/ressources/encrypt.png
     :align: center
 
+The decryption process is designed as follow :
 
+.. image:: ../../pyaescbc/ressources/decrypt.png
+    :align: center
 
 Contents
 --------

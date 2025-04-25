@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>pyaescbc.generate_random_iterations &#8212; pyaescbc 0.0.4 documentation</title>
+    <title>pyaescbc.random_iv &#8212; pyaescbc 0.0.4 documentation</title>
   
   
   
@@ -40,7 +40,7 @@
     <script src="../../_static/documentation_options.js?v=8c5712d9"></script>
     <script src="../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/pyaescbc/generate_random_iterations';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/pyaescbc/random_iv';</script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -292,7 +292,7 @@
     
     <li class="breadcrumb-item"><a href="../index.html" class="nav-link">Module code</a></li>
     
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">pyaescbc.generate_random_iterations</span></li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">pyaescbc.random_iv</span></li>
   </ul>
 </nav>
 </div>
@@ -309,78 +309,21 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <h1>Source code for pyaescbc.generate_random_iterations</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span>
+  <h1>Source code for pyaescbc.random_iv</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">.random_bytearray</span><span class="w"> </span><span class="kn">import</span> <span class="n">random_bytearray</span>
 
-<div class="viewcode-block" id="generate_random_iterations">
-<a class="viewcode-back" href="../../api.html#pyaescbc.generate_random_iterations">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">generate_random_iterations</span><span class="p">(</span><span class="n">Nmin</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">Nmax</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<div class="viewcode-block" id="random_iv">
+<a class="viewcode-back" href="../../api.html#pyaescbc.random_iv">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">random_iv</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bytearray</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Generates a random number of iterations for PBKDF2.</span>
-
-<span class="sd">    The number of iterations is randomly generated between `Nmin` and `Nmax`.</span>
-
-<span class="sd">    Use the following code to estimate the order of magnitude of the number of iterations.</span>
-<span class="sd">    By default, the number of iterations is between 2,000,000 and 5,000,000 (valid for computers with 4GB of RAM in 2021).</span>
-<span class="sd">    It is recommended to have a derived key generation time between 1 and 2 seconds to avoid brute force attacks withouth affecting the user experience.</span>
-
-<span class="sd">    .. code-block:: python</span>
-
-<span class="sd">        import pyaescbc</span>
-<span class="sd">        import time</span>
-<span class="sd">        import os</span>
-
-<span class="sd">        password = pyaescbc.random_bytearray(32)</span>
-<span class="sd">        salt = pyaescbc.random_salt()</span>
-
-<span class="sd">        time_start = time.time()</span>
-<span class="sd">        iteration = 2_000_000 # Change this value to the estimated number of iterations.</span>
-<span class="sd">        pyaescbc.derive_key(password, salt, iteration)</span>
-<span class="sd">        time_end = time.time()</span>
-<span class="sd">        print(f&#39;{iteration=}, {time_end-time_start=}&#39;)</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    Nmin : Optional[int], optional</span>
-<span class="sd">        The minimum number of iterations. The default is None -&gt; 2,000,000.</span>
-
-<span class="sd">    Nmax : Optional[int]</span>
-<span class="sd">        The maximum number of iterations. The default is None -&gt; 5,000,000.</span>
+<span class="sd">    Generates a random 16-byte initialization vector (IV) for AES encryption.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    iterations : int</span>
-<span class="sd">        The random number of iterations.</span>
-
-<span class="sd">    Raises</span>
-<span class="sd">    ------</span>
-<span class="sd">    TypeError</span>
-<span class="sd">        If `Nmin` or `Nmax` are not int instances.</span>
-<span class="sd">    ValueError</span>
-<span class="sd">        If `Nmin` or `Nmax` are not positive integers or if `Nmin` is greater than `Nmax`.</span>
+<span class="sd">    iv : bytearray</span>
+<span class="sd">        A random 16-byte bytearray to be used as an IV.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># Check the types of the parameters</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">Nmin</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">Nmin</span><span class="p">,</span> <span class="nb">int</span><span class="p">)):</span>
-        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Parameter Nmin is not int instance.&#39;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">Nmax</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">Nmax</span><span class="p">,</span> <span class="nb">int</span><span class="p">)):</span>
-        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Parameter Nmax is not int instance.&#39;</span><span class="p">)</span>
-    
-    <span class="k">if</span> <span class="n">Nmin</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">Nmin</span> <span class="o">=</span> <span class="mi">2_000_000</span>
-    <span class="k">if</span> <span class="n">Nmax</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">Nmax</span> <span class="o">=</span> <span class="mi">5_000_000</span>
-    
-    <span class="c1"># Check the values of the parameters</span>
-    <span class="k">if</span> <span class="n">Nmin</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Parameter Nmin must be a positive integer.&#39;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">Nmax</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Parameter Nmax must be a positive integer.&#39;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">Nmin</span> <span class="o">&gt;=</span> <span class="n">Nmax</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Parameter Nmin must be less than Nmax.&#39;</span><span class="p">)</span>
-
-    <span class="c1"># Generate a random number of iterations</span>
-    <span class="k">return</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="n">Nmin</span><span class="p">,</span> <span class="n">Nmax</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">random_bytearray</span><span class="p">(</span><span class="mi">16</span><span class="p">)</span></div>
 
 </pre></div>
 

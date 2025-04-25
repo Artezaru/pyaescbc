@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>pyaescbc.derive_key &#8212; pyaescbc 0.0.3 documentation</title>
+    <title>pyaescbc.derive_key &#8212; pyaescbc 0.0.4 documentation</title>
   
   
   
@@ -37,7 +37,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../../_static/documentation_options.js?v=47de8214"></script>
+    <script src="../../_static/documentation_options.js?v=8c5712d9"></script>
     <script src="../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/pyaescbc/derive_key';</script>
@@ -107,7 +107,7 @@
   
   
   
-    <p class="title logo__title">pyaescbc 0.0.3 documentation</p>
+    <p class="title logo__title">pyaescbc 0.0.4 documentation</p>
   
 </a></div>
     
@@ -318,28 +318,31 @@
 <a class="viewcode-back" href="../../api.html#pyaescbc.derive_key">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">derive_key</span><span class="p">(</span><span class="n">password</span><span class="p">:</span> <span class="nb">bytearray</span><span class="p">,</span> <span class="n">salt</span><span class="p">:</span> <span class="nb">bytearray</span><span class="p">,</span> <span class="n">iterations</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytearray</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Derives a 48-byte key from a password using PBKDF2.</span>
+<span class="sd">    Derives a 64-byte key from a password using PBKDF2HMAC.</span>
+<span class="sd">    The algorithm used is SHA256.</span>
 
 <span class="sd">    The derived key is composed by the AES key and the HMAC key, both 32 bytes long.</span>
-<span class="sd">    The AES key is used to encrypt the data using AES in CBC mode.</span>
-<span class="sd">    The HMAC key is used to create the HMAC of the data.</span>
+<span class="sd">    The AES key is used to encrypt or decrypt the data using AES in CBC mode.</span>
+<span class="sd">    The HMAC key is used to create the HMAC to verify the integrity of the data.</span>
+
+<span class="sd">    By default, the input parameters are deleted from memory at the end of the function.</span>
 
 <span class="sd">    .. seealso::</span>
 
-<span class="sd">        -function :func:`pyaescbc.generate_random_iterations` or :func:`pyaescbc.generate_pin_iterations` to generate the number of iterations.</span>
 <span class="sd">        -function :func:`pyaescbc.encrypt_AES_CBC` to encrypt the data using AES in CBC mode.</span>
+<span class="sd">        -function :func:`pyaescbc.decrypt_AES_CBC` to decrypt the data using AES in CBC mode.</span>
 <span class="sd">        -function :func:`pyaescbc.create_hmac` to create the HMAC of the data.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    password : bytearray</span>
-<span class="sd">        The user password.</span>
+<span class="sd">        The user password. It must not be empty.</span>
 
 <span class="sd">    salt : bytearray</span>
 <span class="sd">        The 32-byte salt used to generate the derived key.</span>
 
 <span class="sd">    iterations : int</span>
-<span class="sd">        The number of iterations for PBKDF2.</span>
+<span class="sd">        The number of iterations for PBKDF2. It must be a strictly positive integer.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -351,8 +354,9 @@
 <span class="sd">    TypeError</span>
 <span class="sd">        If the arguments are not of the correct types.</span>
 <span class="sd">    ValueError</span>
-<span class="sd">        If `iterations` is not a positive integer.</span>
+<span class="sd">        If `iterations` is not a strictly positive integer, `salt` is not 32 bytes long, or `password` is empty.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Check the types of the parameters</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">password</span><span class="p">,</span> <span class="nb">bytearray</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Parameter password is not bytearray instance.&#39;</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">salt</span><span class="p">,</span> <span class="nb">bytearray</span><span class="p">):</span>
@@ -360,6 +364,7 @@
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">iterations</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Parameter iterations is not int instance.&#39;</span><span class="p">)</span>
 
+    <span class="c1"># Check the values of the parameters</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">password</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Parameter password must not be empty.&#39;</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">iterations</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
@@ -367,6 +372,7 @@
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">salt</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">32</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">salt</span><span class="si">=}</span><span class="s1"> is not 32 bytes long.&#39;</span><span class="p">)</span> 
 
+    <span class="c1"># Derive the key using PBKDF2HMAC</span>
     <span class="n">kdf</span> <span class="o">=</span> <span class="n">PBKDF2HMAC</span><span class="p">(</span><span class="n">algorithm</span><span class="o">=</span><span class="n">hashes</span><span class="o">.</span><span class="n">SHA256</span><span class="p">(),</span>
                      <span class="n">length</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span>  <span class="c1"># 32 bytes for AES + 32 bytes for HMAC</span>
                      <span class="n">salt</span><span class="o">=</span><span class="nb">bytes</span><span class="p">(</span><span class="n">salt</span><span class="p">),</span>
