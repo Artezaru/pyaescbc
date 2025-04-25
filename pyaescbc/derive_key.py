@@ -4,28 +4,31 @@ from cryptography.hazmat.backends import default_backend
 
 def derive_key(password: bytearray, salt: bytearray, iterations: int) -> bytearray:
     """
-    Derives a 48-byte key from a password using PBKDF2.
+    Derives a 64-byte key from a password using PBKDF2HMAC.
+    The algorithm used is SHA256.
 
     The derived key is composed by the AES key and the HMAC key, both 32 bytes long.
-    The AES key is used to encrypt the data using AES in CBC mode.
-    The HMAC key is used to create the HMAC of the data.
+    The AES key is used to encrypt or decrypt the data using AES in CBC mode.
+    The HMAC key is used to create the HMAC to verify the integrity of the data.
+
+    By default, the input parameters are deleted from memory at the end of the function.
 
     .. seealso::
 
-        -function :func:`pyaescbc.generate_random_iterations` or :func:`pyaescbc.generate_pin_iterations` to generate the number of iterations.
         -function :func:`pyaescbc.encrypt_AES_CBC` to encrypt the data using AES in CBC mode.
+        -function :func:`pyaescbc.decrypt_AES_CBC` to decrypt the data using AES in CBC mode.
         -function :func:`pyaescbc.create_hmac` to create the HMAC of the data.
 
     Parameters
     ----------
     password : bytearray
-        The user password.
+        The user password. It must not be empty.
 
     salt : bytearray
         The 32-byte salt used to generate the derived key.
 
     iterations : int
-        The number of iterations for PBKDF2.
+        The number of iterations for PBKDF2. It must be a strictly positive integer.
 
     Returns
     -------
@@ -37,8 +40,9 @@ def derive_key(password: bytearray, salt: bytearray, iterations: int) -> bytearr
     TypeError
         If the arguments are not of the correct types.
     ValueError
-        If `iterations` is not a positive integer.
+        If `iterations` is not a strictly positive integer, `salt` is not 32 bytes long, or `password` is empty.
     """
+    # Check the types of the parameters
     if not isinstance(password, bytearray):
         raise TypeError('Parameter password is not bytearray instance.')
     if not isinstance(salt, bytearray):
@@ -46,6 +50,7 @@ def derive_key(password: bytearray, salt: bytearray, iterations: int) -> bytearr
     if not isinstance(iterations, int):
         raise TypeError('Parameter iterations is not int instance.')
 
+    # Check the values of the parameters
     if len(password) == 0:
         raise ValueError('Parameter password must not be empty.')
     if iterations <= 0:
@@ -53,6 +58,7 @@ def derive_key(password: bytearray, salt: bytearray, iterations: int) -> bytearr
     if len(salt) != 32:
         raise ValueError(f'{salt=} is not 32 bytes long.') 
 
+    # Derive the key using PBKDF2HMAC
     kdf = PBKDF2HMAC(algorithm=hashes.SHA256(),
                      length=64,  # 32 bytes for AES + 32 bytes for HMAC
                      salt=bytes(salt),

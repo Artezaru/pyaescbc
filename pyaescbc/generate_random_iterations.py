@@ -18,7 +18,7 @@ def generate_random_iterations(Nmin: Optional[int] = None, Nmax: Optional[int] =
         import os
 
         password = pyaescbc.random_bytearray(32)
-        salt = pyaescbc.random_bytearray(32)
+        salt = pyaescbc.random_salt()
 
         time_start = time.time()
         iteration = 2_000_000 # Change this value to the estimated number of iterations.
@@ -46,6 +46,7 @@ def generate_random_iterations(Nmin: Optional[int] = None, Nmax: Optional[int] =
     ValueError
         If `Nmin` or `Nmax` are not positive integers or if `Nmin` is greater than `Nmax`.
     """
+    # Check the types of the parameters
     if (Nmin is not None) and (not isinstance(Nmin, int)):
         raise TypeError('Parameter Nmin is not int instance.')
     if (Nmax is not None) and (not isinstance(Nmax, int)):
@@ -56,6 +57,7 @@ def generate_random_iterations(Nmin: Optional[int] = None, Nmax: Optional[int] =
     if Nmax is None:
         Nmax = 5_000_000
     
+    # Check the values of the parameters
     if Nmin <= 0:
         raise ValueError('Parameter Nmin must be a positive integer.')
     if Nmax <= 0:
@@ -63,4 +65,5 @@ def generate_random_iterations(Nmin: Optional[int] = None, Nmax: Optional[int] =
     if Nmin >= Nmax:
         raise ValueError('Parameter Nmin must be less than Nmax.')
 
+    # Generate a random number of iterations
     return random.randint(Nmin, Nmax)

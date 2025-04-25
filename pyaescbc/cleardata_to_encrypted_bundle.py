@@ -1,4 +1,7 @@
-from .random_bytearray import random_bytearray
+from typing import Optional
+
+from .random_salt import random_salt
+from .random_iv import random_iv
 from .derive_key import derive_key
 from .encrypt_AES_CBC import encrypt_AES_CBC
 from .create_hmac import create_hmac
@@ -9,6 +12,7 @@ def cleardata_to_encrypted_bundle(
     cleardata: bytearray, 
     password: bytearray, 
     iterations: int,
+    authdata: Optional[bytearray] = None,
     delete_keys: bool = True
 ) -> bytearray: 
     """
@@ -18,7 +22,7 @@ def cleardata_to_encrypted_bundle(
 
     .. note::
         
-        The cleardata and the password are deleted from memory at the end of the function if delete_keys is True.
+        The cleardata, the password and the authdata are deleted from memory at the end of the function if delete_keys is True.
         Otherwise, they need to be deleted after dealing with Exception.
 
     .. note::
@@ -41,13 +45,17 @@ def cleardata_to_encrypted_bundle(
         The clear message to encrypt using AES in CBC mode.
 
     password : bytearray
-        The user password.
+        The user password. It must not be empty.
 
     iterations : int
-        The number of iterations for PBKDF2.
+        The number of iterations for PBKDF2. It must be a strictly positive integer.
+
+    authdata : Optional[bytearray]
+        The authentication data to use in the HMAC. Default is None.
+        If not None, it will be used to create the HMAC. 
 
     delete_keys : bool
-        Delete the cleardata, the password from memory at the end of the function. Default is True.
+        Delete the cleardata, the password and authdata from memory at the end of the function. Default is True.
 
     Returns
     -------
@@ -59,30 +67,44 @@ def cleardata_to_encrypted_bundle(
     TypeError
         If an argument is of the wrong type.
     ValueError
-        If Nmin or Nmax are not positive integers or if Nmin is greater than Nmax.
+        If password is empty or if iterations is not a strictly positive integer.
     """
+    # Check the types of the parameters
     if (not isinstance(cleardata, bytearray)) or (not isinstance(password, bytearray)):
         raise TypeError("Parameters cleardata or password is not bytearray")
     if not isinstance(iterations, int):
         raise TypeError("Parameter iterations is not integer")
+    if (authdata is not None) and (not isinstance(authdata, bytearray)):
+        raise TypeError("Parameter authdata is not bytearray")
     if not isinstance(delete_keys, bool):
-        raise ValueError("Parameter delete_keys is not a boolean.")
+        raise TypeError("Parameter delete_keys is not a boolean.")
 
     # Encryption
-    salt = random_bytearray(32)
-    iv = random_bytearray(16)
-    derived_key = derive_key(password, salt, iterations)
-    cipherdata = encrypt_AES_CBC(cleardata, derived_key, iv)
-    expected_hmac = create_hmac(derived_key, iv, cipherdata)
-    encrypted_bundle = create_encrypted_bundle(iv, salt, expected_hmac, cipherdata)
+    try:
+        salt = random_salt()
+        iv = random_iv()
+        derived_key = derive_key(password, salt, iterations)
+        aes_key = derived_key[:32]  # AES key is the first 32 bytes of the derived key
+        hmac_key = derived_key[32:]  # HMAC key is the last 32 bytes of the derived key
+        cipherdata = encrypt_AES_CBC(cleardata, aes_key, iv)
+        expected_hmac = create_hmac(hmac_key, iv, cipherdata, authdata=authdata)
+        encrypted_bundle = create_encrypted_bundle(iv, salt, expected_hmac, cipherdata)
+    except Exception as e:
+        raise e
+    finally:
+        # Deleting from memory all critical data for security (in the order of their creation to avoid memory leaks)
+        if delete_keys:
+            delete_bytearray(cleardata)
+            delete_bytearray(password)
+            if authdata is not None:
+                delete_bytearray(authdata)
+        delete_bytearray(salt)
+        delete_bytearray(iv)
+        delete_bytearray(derived_key)
+        delete_bytearray(aes_key)
+        delete_bytearray(hmac_key)
+        delete_bytearray(cipherdata)
+        delete_bytearray(expected_hmac)
 
-    # Deleting from memory all critical data for security
-    if delete_keys:
-        delete_bytearray(password)
-        delete_bytearray(cleardata)
-    delete_bytearray(salt)
-    delete_bytearray(iv)
-    delete_bytearray(cipherdata)
-    delete_bytearray(derived_key)
-
+    # Return the encrypted bundle
     return encrypted_bundle

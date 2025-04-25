@@ -1,12 +1,16 @@
 import hmac
 import hashlib
-from .delete_bytearray import delete_bytearray
+from typing import Optional
 
-def create_hmac(derived_key: bytearray, iv: bytearray, cipherdata: bytearray) -> bytearray:
+def create_hmac(hmac_key: bytearray, iv: bytearray, cipherdata: bytearray, authdata: Optional[bytearray] = None) -> bytearray:
     """
-    Creates the expected HMAC value from the derived key, IV, and cipherdata.
+    Creates the expected HMAC using the hmac_key on the iv, cipherdata, and optional auth_data.
+    The HMAC is created using the SHA-256 hash function. The HMAC is used to verify the integrity of the encrypted message.
+    The hmac_key is extracted from the derived key, which is created using PBKDF2HMAC.
 
-    The HMAC allows the receiver to verify the integrity of the encrypted message.
+    .. code-block:: console
+
+        HMAC = HMAC(key, SHA256(iv + cipherdata + authdata))
 
     .. seealso::
 
@@ -14,14 +18,17 @@ def create_hmac(derived_key: bytearray, iv: bytearray, cipherdata: bytearray) ->
 
     Parameters
     ----------
-    derived_key : bytearray
-        The 64-byte derived key.
+    hmac_key : bytearray
+        The 32-byte long key used to create the HMAC. It is extracted from the derived key.
 
     iv : bytearray
         The 16-byte long initialization vector used for encryption.
 
     cipherdata : bytearray
         The encrypted message.
+
+    authdata : Optional[bytearray]
+        Optional additional authentication data. If provided, it is prepended to the HMAC input.
 
     Returns
     -------
@@ -34,22 +41,27 @@ def create_hmac(derived_key: bytearray, iv: bytearray, cipherdata: bytearray) ->
         If any argument is not a `bytearray` instance.
 
     ValueError
-        If the derived key isn't 64 bytes or the IV isn't 16 bytes.
+        If the hmac_key isn't 32 bytes, the IV isn't 16 bytes.
     """
-    if not isinstance(derived_key, bytearray):
-        raise TypeError('Parameter derived_key is not bytearray instance.')
+    # Check the types of the parameters
+    if not isinstance(hmac_key, bytearray):
+        raise TypeError('Parameter hmac_key is not bytearray instance.')
     if not isinstance(iv, bytearray):
         raise TypeError('Parameter iv is not bytearray instance.')
     if not isinstance(cipherdata, bytearray):
         raise TypeError('Parameter cipherdata is not bytearray instance.')
-        
-    if len(derived_key) != 64:
-        raise ValueError(f'{derived_key=} is not 64 bytes long.') 
+    if authdata is not None and not isinstance(authdata, bytearray):
+        raise TypeError('Parameter authdata is not bytearray instance.')
+    
+    # Check the value of the parameters
+    if len(hmac_key) != 32:
+        raise ValueError(f'{hmac_key=} is not 32 bytes long.') 
     if len(iv) != 16:
         raise ValueError(f'{iv=} is not 16 bytes long.')
 
-    hmac_key = derived_key[32:]
-    expected_hmac = bytearray(hmac.new(hmac_key, iv + cipherdata, hashlib.sha256).digest())
-    # Securely delete the hmac_key
-    delete_bytearray(hmac_key)
+    # Create the HMAC
+    if authdata is None:
+        authdata = bytearray()
+    expected_hmac = bytearray(hmac.new(hmac_key, iv + cipherdata + authdata, hashlib.sha256).digest())
+
     return expected_hmac

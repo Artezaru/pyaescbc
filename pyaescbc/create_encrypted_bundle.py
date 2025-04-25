@@ -4,6 +4,10 @@ def create_encrypted_bundle(iv: bytearray, salt: bytearray, expected_hmac: bytea
 
     The encrypted bundle is composed by the initialization vector (IV), the salt, the expected HMAC and the cipherdata.
 
+    .. seealso::
+
+        - function :func:`pyaescbc.extract_cryptography_components` to extract the components from the encrypted bundle.
+
     Parameters
     ----------
     iv : bytearray
@@ -30,6 +34,7 @@ def create_encrypted_bundle(iv: bytearray, salt: bytearray, expected_hmac: bytea
     ValueError
         If any of the components (salt, iv, hmac) are not the correct length.
     """
+    # Check the types of the parameters
     if not isinstance(iv, bytearray):
         raise TypeError('Parameter iv is not bytearray instance.')
     if not isinstance(salt, bytearray):
@@ -39,6 +44,7 @@ def create_encrypted_bundle(iv: bytearray, salt: bytearray, expected_hmac: bytea
     if not isinstance(cipherdata, bytearray):
         raise TypeError('Parameter cipherdata is not bytearray instance.')
     
+    # Check the values of the parameters
     if len(iv) != 16:
         raise ValueError(f'{iv=} is not 16 bytes long.') 
     if len(salt) != 32:
@@ -46,4 +52,5 @@ def create_encrypted_bundle(iv: bytearray, salt: bytearray, expected_hmac: bytea
     if len(expected_hmac) != 32:
         raise ValueError(f'{expected_hmac=} is not 32 bytes long.')
 
+    # Create the encrypted bundle
     return iv + salt + expected_hmac + cipherdata

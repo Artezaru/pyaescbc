@@ -1,8 +1,11 @@
-def extract_cryptography_components(encrypted_bundle: bytearray) -> (bytearray, bytearray, bytearray, bytearray):
+from typing import Tuple
+
+def extract_cryptography_components(encrypted_bundle: bytearray) -> Tuple[bytearray, bytearray, bytearray, bytearray]:
     """
     Extracts the IV, salt, expected HMAC, and cipherdata from the encrypted bundle.
 
     .. seealso::
+
         - function :func:`pyaescbc.create_encrypted_bundle` to create the encrypted bundle.
 
     Parameters
@@ -22,11 +25,15 @@ def extract_cryptography_components(encrypted_bundle: bytearray) -> (bytearray, 
     ValueError
         If the bytearray does not contain at least 80 bytes.
     """
+    # Check the types of the parameters
     if not isinstance(encrypted_bundle, bytearray):
         raise TypeError('Parameter encrypted_bundle is not bytearray instance.')
+    
+    # Check the value of the parameters
     if len(encrypted_bundle) < 80:
         raise ValueError(f'encrypted_bundle does not contain more than 80 bytes.') 
 
+    # Extract the components
     iv = encrypted_bundle[0:16]
     salt = encrypted_bundle[16:48]
     expected_hmac = encrypted_bundle[48:80]

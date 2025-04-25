@@ -1,15 +1,18 @@
-from .random_bytearray import random_bytearray
+from typing import Optional
+
 from .derive_key import derive_key
 from .decrypt_AES_CBC import decrypt_AES_CBC
 from .extract_cryptography_components import extract_cryptography_components
-from .verify_key import verify_key
+from .check_hmac import check_hmac
+from .create_hmac import create_hmac
 from .delete_bytearray import delete_bytearray
-from .wrong_key_error import WrongKeyError
+from .auth_error import AuthError
 
 def encrypted_bundle_to_cleardata(
     encrypted_bundle: bytearray,
     password: bytearray, 
     iterations: int,
+    authdata: Optional[bytearray] = None,
     delete_keys: bool = True
 ) -> bytearray: 
     """
@@ -19,7 +22,7 @@ def encrypted_bundle_to_cleardata(
 
     .. note::
         
-        The encrypted_bundle and the password are deleted from memory at the end of the function if delete_keys is True.
+        The encrypted_bundle, the password and the authdata are deleted from memory at the end of the function if delete_keys is True.
         Otherwise, they need to be deleted after dealing with Exception.
 
     .. note::
@@ -42,13 +45,17 @@ def encrypted_bundle_to_cleardata(
         The encrypted bundle to decrypt using AES in CBC mode. Must contain at least 80 bytes.
 
     password : bytearray
-        The user password.
+        The user password. It must not be empty.
 
     iterations : int
-        The number of iterations for PBKDF2.
+        The number of iterations for PBKDF2. It must be a strictly positive integer.
+    
+    authdata : Optional[bytearray]
+        The authentication data to use in the HMAC. Default is None.
+        If not None, it will be used to create the HMAC.
 
     delete_keys : bool
-        Delete the cleardata, the password from memory at the end of the function. Default is True.
+        Delete the encrypted_bundle, the password from memory at the end of the function. Default is True.
 
     Returns
     -------
@@ -60,8 +67,9 @@ def encrypted_bundle_to_cleardata(
     TypeError
         If an argument is of the wrong type.
     ValueError
-        If Nmin or Nmax are not positive integers or if Nmin is greater than Nmax.
+        If `password` is empty, `iterations` is not a strictly positive integer, or `encrypted_bundle` does not contain more than 80 bytes.
     """
+    # Check the types of the parameters
     if (not isinstance(encrypted_bundle, bytearray)) or (not isinstance(password, bytearray)):
         raise TypeError("Parameters encrypted_bundle or password is not bytearray")
     if not isinstance(iterations, int):
@@ -69,34 +77,41 @@ def encrypted_bundle_to_cleardata(
     if not isinstance(delete_keys, bool):
         raise ValueError("Parameter delete_keys is not a boolean.")
 
+    # Check the values of the parameters
+    if len(password) == 0:
+        raise ValueError('Parameter password must not be empty.')
+    if iterations <= 0:
+        raise ValueError('Parameter iterations must be a positive integer.')
     if len(encrypted_bundle) < 80:
         raise ValueError(f'encrypted_bundle does not contain more than 80 bytes.')
 
     # Decryption
-    iv, salt, expected_hmac, cipherdata = extract_cryptography_components(encrypted_bundle)
-    derived_key = derive_key(password, salt, iterations)
-    if not verify_key(derived_key, iv, cipherdata, expected_hmac):
-        # Deleting from memory all critical data for security
+    try:
+        iv, salt, expected_hmac, cipherdata = extract_cryptography_components(encrypted_bundle)
+        derived_key = derive_key(password, salt, iterations)
+        aes_key = derived_key[:32]  # AES key is the first 32 bytes of the derived key
+        hmac_key = derived_key[32:]  # HMAC key is the last 32 bytes of the derived key
+        given_hmac = create_hmac(hmac_key, iv, cipherdata, authdata=authdata)
+        if not check_hmac(given_hmac, expected_hmac):
+            raise AuthError('The HMAC is not valid. The data has been tampered with or the password is incorrect.')
+        cleardata = decrypt_AES_CBC(cipherdata, aes_key, iv)
+    except Exception as e:
+        raise e
+    finally:
+        # Deleting from memory all critical data for security (in the order of their creation to avoid memory leaks)
         if delete_keys:
-            delete_bytearray(password)
             delete_bytearray(encrypted_bundle)
-        delete_bytearray(derived_key)
+            delete_bytearray(password)
+            if authdata is not None:
+                delete_bytearray(authdata)
         delete_bytearray(iv)
         delete_bytearray(salt)
         delete_bytearray(expected_hmac)
         delete_bytearray(cipherdata)
-        raise WrongKeyError("WARNING: password can't decrypt the encrypted_bundle")
-
-    cleardata = decrypt_AES_CBC(cipherdata, derived_key, iv)
-
-    # Deleting from memory all critical data for security
-    if delete_keys:
-        delete_bytearray(password)
-        delete_bytearray(encrypted_bundle)
-    delete_bytearray(derived_key)
-    delete_bytearray(iv)
-    delete_bytearray(salt)
-    delete_bytearray(expected_hmac)
-    delete_bytearray(cipherdata)
-
+        delete_bytearray(derived_key)
+        delete_bytearray(aes_key)
+        delete_bytearray(hmac_key)
+        delete_bytearray(given_hmac)
+        
+    # Return the decrypted data
     return cleardata

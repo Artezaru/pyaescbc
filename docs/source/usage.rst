@@ -21,7 +21,7 @@ If your clear data is a string, you can convert them to bytearray using the foll
     string = "Hello, World!"
     byte_array = bytearray(string, 'utf-8')
 
-Similarly, afetr decrypting, you can convert the bytearray back to a string using the following code:
+Similarly, after decrypting, you can convert the bytearray back to a string using the following code:
 
 .. code-block:: python
 

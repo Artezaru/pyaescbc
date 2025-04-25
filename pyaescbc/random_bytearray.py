@@ -21,6 +21,7 @@ def random_bytearray(Nbytes: int) -> bytearray:
     ValueError
         If `Nbytes` is not a positive integer.
     """
+    # Check if Nbytes is a positive integer
     if not isinstance(Nbytes, int):
         raise TypeError('Parameter Nbytes is not integer.')
     if Nbytes < 0:
