@@ -13,12 +13,12 @@ The package is designed to be easy to use and secure, and it is suitable for enc
 
 The encryption process is designed as follow :
 
-.. image:: ../../pyaescbc/ressources/encrypt.png
+.. image:: ../../pyaescbc/resources/encrypt.png
     :align: center
 
 The decryption process is designed as follow :
 
-.. image:: ../../pyaescbc/ressources/decrypt.png
+.. image:: ../../pyaescbc/resources/decrypt.png
     :align: center
 
 Contents
