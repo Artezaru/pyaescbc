@@ -29,9 +29,9 @@ decrypted_data = pyaescbc.decrypt(encrypted_bundle, password, iterations, authda
 print(decrypted_data)
 ```
 
-![Encryption Process](./pyaescbc/ressources/encrypt.png)
+![Encryption Process](https://raw.githubusercontent.com/Artezaru/pyaescbc/master/pyaescbc/resources/encrypt.png)
 
-![Decryption Process](./pyaescbc/ressources/decrypt.png)
+![Decryption Process](https://raw.githubusercontent.com/Artezaru/pyaescbc/master/pyaescbc/resources/decrypt.png)
 
 ## Authors
 
@@ -45,6 +45,10 @@ print(decrypted_data)
 Install with pip
 
 ```
+pip install pyaescbc
+```
+
+```
 pip install git+https://github.com/Artezaru/pyaescbc.git
 ```
 
@@ -56,4 +60,17 @@ git clone https://github.com/Artezaru/pyaescbc.git
 
 ## License
 
-See LICENSE
+Copyright 2025 Artezaru
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+

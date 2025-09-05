@@ -7,16 +7,27 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pyaescbc"
-requires-python = ">= 3.8"
-dynamic = ["dependencies", "version"]
-description = "AES-CBC encryption tools based on crytography package !"
+requires-python = ">= 3.10"
+dynamic = ["version"]
+description = "AES-CBC encryption tools based on crytography package."
 license = {file = "LICENSE"}
 authors = [
 {name = "Artezaru", email = "artezaru.github@proton.me"}
 ]
 classifiers = [
-  "Programming Language :: Python"
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: Apache Software License",
+    "Operating System :: OS Independent",
 ]
+dependencies = [
+    "cryptography>=39.0.1",
+]
+
+[project.urls]
+Homepage = "https://github.com/Artezaru/pyaescbc"
+Documentation = "https://Artezaru.github.io/pyaescbc"
+Source = "https://github.com/Artezaru/pyaescbc"
+Tracker = "https://github.com/Artezaru/pyaescbc/issues"
 
 [tool.setuptools.packages.find]
 where = ["."]
@@ -24,16 +35,9 @@ include = ["pyaescbc", "pyaescbc*"]
 exclude = ["laboratory", "laboratory.*", "tests", "tests*", "examples", "examples*"]
 
 [tool.setuptools.package-data]
-"pyaescbc.ressources" = ["*"]
-
-[project.scripts]
-pyaescbc = "pyaescbc.__main__:__main__"
-
-[project.gui-scripts]
-pyaescbc-gui = "pyaescbc.__main__:__main_gui__"
+"pyaescbc.resources" = ["*"]
 
 [tool.setuptools.dynamic]
-dependencies = {file = ["requirements.txt"]}
 version = {attr = "pyaescbc.__version__.__version__"}
 
 [project.optional-dependencies]
@@ -42,8 +46,10 @@ dev = [
     "pydata-sphinx-theme",
     "numpydoc",
     "pytest",
-    "pyinstaller",
     "pytest-cov",
     "bumpver",
-    "pyinstaller"
 ]
+
+[project.readme]
+file = "README.md"
+content-type = "text/markdown"
