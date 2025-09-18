@@ -48,6 +48,8 @@ dev = [
     "pytest",
     "pytest-cov",
     "bumpver",
+    "twine",
+    "wheel",
 ]
 
 [project.readme]
