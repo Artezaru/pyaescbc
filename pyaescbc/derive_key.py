@@ -54,7 +54,7 @@ def derive_key(password: bytearray, salt: bytearray, iterations: int) -> bytearr
     TypeError
         If the arguments are not of the correct types.
     ValueError
-        If `iterations` is not a strictly positive integer, `salt` is not 32 bytes long, or `password` is empty.
+        If ``iterations`` is not a strictly positive integer, ``salt`` is not 32 bytes long, or ``password`` is empty.
     """
     # Check the types of the parameters
     if not isinstance(password, bytearray):

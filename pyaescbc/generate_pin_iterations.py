@@ -22,7 +22,7 @@ def generate_pin_iterations(pin: bytearray, Nmin: Optional[int] = None, Nmax: Op
     Generates a number of iterations for PBKDF2 based on the PIN.
 
     Use the following code to estimate the order of magnitude of the number of iterations.
-    By default, the number of iterations is between 2,000,000 and 5,000,000 (valid for computers with 4GB of RAM in 2021).
+    By default, the number of iterations is between ``2,000,000`` and ``5,000,000`` (valid for computers with 4GB of RAM in 2021).
     It is recommended to have a derived key generation time between 1 and 2 seconds to avoid brute force attacks withouth affecting the user experience.
 
     .. note::
@@ -68,9 +68,9 @@ def generate_pin_iterations(pin: bytearray, Nmin: Optional[int] = None, Nmax: Op
     Raises
     ------
     TypeError
-        If `Nmin` or `Nmax` are not int instances or if `pin` is not a bytearray instance.
+        If ``Nmin`` or ``Nmax`` are not int instances or if ``pin`` is not a bytearray instance.
     ValueError
-        If `Nmin` or `Nmax` are not positive integers or if `Nmin` is greater than `Nmax`.
+        If ``Nmin`` or ``Nmax`` are not positive integers or if ``Nmin`` is greater than ``Nmax``.
     """
     # Check the types of the parameters
     if not isinstance(pin, bytearray):

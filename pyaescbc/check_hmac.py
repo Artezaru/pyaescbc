@@ -34,7 +34,7 @@ def check_hmac(given_hmac: bytearray, expected_hmac: bytearray) -> bool:
     Raises
     ------
     TypeError
-        If any argument is not a `bytearray` instance.
+        If any argument is not a ``bytearray`` instance.
     ValueError
         If the given_hmac or expected_hmac isn't 32 bytes.
     """

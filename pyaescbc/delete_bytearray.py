@@ -37,7 +37,7 @@ def delete_bytearray(barray: bytearray) -> None:
     Raises
     ------
     TypeError
-        If the given argument is not a `bytearray` instance.
+        If the given argument is not a ``bytearray`` instance.
     """
     # Check if the input is a bytearray
     if not isinstance(barray, bytearray):

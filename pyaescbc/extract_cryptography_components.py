@@ -35,7 +35,7 @@ def extract_cryptography_components(encrypted_bundle: bytearray) -> Tuple[bytear
     Raises
     ------
     TypeError
-        If the argument is not a `bytearray` instance.
+        If the argument is not a ``bytearray`` instance.
     ValueError
         If the bytearray does not contain at least 80 bytes.
     """

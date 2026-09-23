@@ -49,9 +49,9 @@ def decrypt_AES_CBC(cipherdata: bytearray, aes_key: bytearray, iv: bytearray) ->
     Raises
     ------
     TypeError
-        If a given argument is not a `bytearray` instance.
+        If a given argument is not a ``bytearray`` instance.
     ValueError
-        If the `aes_key` isn't 32 bytes long or the `iv` isn't 16 bytes long.
+        If the ``aes_key`` isn't 32 bytes long or the ``iv`` isn't 16 bytes long.
     """
     # Check the types of the parameters
     if not isinstance(cipherdata, bytearray):

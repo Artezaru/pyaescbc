@@ -19,10 +19,10 @@ def generate_random_iterations(Nmin: Optional[int] = None, Nmax: Optional[int] =
     """
     Generates a random number of iterations for PBKDF2.
 
-    The number of iterations is randomly generated between `Nmin` and `Nmax`.
+    The number of iterations is randomly generated between ``Nmin`` and ``Nmax``.
 
     Use the following code to estimate the order of magnitude of the number of iterations.
-    By default, the number of iterations is between 2,000,000 and 5,000,000 (valid for computers with 4GB of RAM in 2021).
+    By default, the number of iterations is between ``2,000,000`` and ``5,000,000`` (valid for computers with 4GB of RAM in 2021).
     It is recommended to have a derived key generation time between 1 and 2 seconds to avoid brute force attacks withouth affecting the user experience.
 
     .. code-block:: python
@@ -56,9 +56,9 @@ def generate_random_iterations(Nmin: Optional[int] = None, Nmax: Optional[int] =
     Raises
     ------
     TypeError
-        If `Nmin` or `Nmax` are not int instances.
+        If ``Nmin`` or ``Nmax`` are not int instances.
     ValueError
-        If `Nmin` or `Nmax` are not positive integers or if `Nmin` is greater than `Nmax`.
+        If ``Nmin`` or ``Nmax`` are not positive integers or if ``Nmin`` is greater than ``Nmax``.
     """
     # Check the types of the parameters
     if (Nmin is not None) and (not isinstance(Nmin, int)):

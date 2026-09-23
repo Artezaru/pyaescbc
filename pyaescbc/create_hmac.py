@@ -52,7 +52,7 @@ def create_hmac(hmac_key: bytearray, iv: bytearray, cipherdata: bytearray, authd
     Raises
     ------
     TypeError
-        If any argument is not a `bytearray` instance.
+        If any argument is not a ``bytearray`` instance.
 
     ValueError
         If the hmac_key isn't 32 bytes, the IV isn't 16 bytes.

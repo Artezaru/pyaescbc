@@ -39,12 +39,12 @@ def create_encrypted_bundle(iv: bytearray, salt: bytearray, expected_hmac: bytea
     Returns
     -------
     encrypted_bundle : bytearray
-        The concatenated bytearray containing `iv + salt + expected_hmac + cipherdata`.
+        The concatenated bytearray containing ``iv + salt + expected_hmac + cipherdata``.
 
     Raises
     ------
     TypeError
-        If any argument is not a `bytearray` instance.
+        If any argument is not a ``bytearray`` instance.
     ValueError
         If any of the components (salt, iv, hmac) are not the correct length.
     """
@@ -67,4 +67,5 @@ def create_encrypted_bundle(iv: bytearray, salt: bytearray, expected_hmac: bytea
         raise ValueError(f'{expected_hmac=} is not 32 bytes long.')
 
     # Create the encrypted bundle
-    return iv + salt + expected_hmac + cipherdata
+    # Use join to create only one memory allocation
+    return bytearray().join((iv, salt, expected_hmac, cipherdata))
