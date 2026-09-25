@@ -26,8 +26,8 @@ from .auth_error import AuthError
 def encrypted_bundle_to_cleardata(
     encrypted_bundle: bytearray,
     password: bytearray,
-    authdata: Optional[bytearray] = None,
     *,
+    authdata: Optional[bytearray] = None,
     delete_keys: bool = True,
     delete_data: bool = False,
 ) -> bytearray:

@@ -28,8 +28,8 @@ DEFAULT_ITERATIONS = 600_000
 def cleardata_to_encrypted_bundle(
     cleardata: bytearray,
     password: bytearray,
-    authdata: Optional[bytearray] = None,
     *,
+    authdata: Optional[bytearray] = None,
     iterations: int = DEFAULT_ITERATIONS,
     delete_keys: bool = True,
     delete_data: bool = True,
