@@ -13,14 +13,19 @@
 # limitations under the License.
 
 from cryptography.hazmat.primitives import padding, ciphers
-from cryptography.hazmat.backends import default_backend
+from .delete_bytearray import delete_bytearray
 
 def decrypt_AES_CBC(cipherdata: bytearray, aes_key: bytearray, iv: bytearray) -> bytearray:
     """
-    Decrypts a cipherdata message using AES in CBC mode.
+    Decrypts a cipherdata message using AES-256 in CBC mode.
 
-    The data is unpadded using PKCS7 padding and then decrypted using AES in CBC mode.
-    The aes_key is the first 32 bytes of the derived key, and the iv is the initialization vector.
+    The data is decrypted using AES-256 in CBC mode and then unpadded using PKCS7 padding.
+
+    .. warning::
+
+        This function does not authenticate the data. The HMAC of the ``iv`` and
+        ``cipherdata`` MUST be verified (constant-time comparison) BEFORE calling this
+        function. Decrypting unauthenticated data exposes a padding oracle.
 
     .. seealso::
 
@@ -33,13 +38,13 @@ def decrypt_AES_CBC(cipherdata: bytearray, aes_key: bytearray, iv: bytearray) ->
     Parameters
     ----------
     cipherdata : bytearray
-        The encrypted message to decrypt using AES in CBC mode.
+        The encrypted message to decrypt. Its length must be a positive multiple of 16.
 
     aes_key : bytearray
-        The 32-byte AES key derived from the password, salt and iterations.
+        The 32-byte AES key.
 
     iv : bytearray
-        The 16-byte initialization vector (IV) to use in AES-CBC mode.
+        The 16-byte initialization vector (IV) used in AES-CBC mode.
 
     Returns
     -------
@@ -51,7 +56,8 @@ def decrypt_AES_CBC(cipherdata: bytearray, aes_key: bytearray, iv: bytearray) ->
     TypeError
         If a given argument is not a ``bytearray`` instance.
     ValueError
-        If the ``aes_key`` isn't 32 bytes long or the ``iv`` isn't 16 bytes long.
+        If the ``aes_key`` isn't 32 bytes long, the ``iv`` isn't 16 bytes long,
+        the ``cipherdata`` length isn't a positive multiple of 16, or the padding is invalid.
     """
     # Check the types of the parameters
     if not isinstance(cipherdata, bytearray):
@@ -61,18 +67,29 @@ def decrypt_AES_CBC(cipherdata: bytearray, aes_key: bytearray, iv: bytearray) ->
     if not isinstance(iv, bytearray):
         raise TypeError('Parameter iv is not bytearray instance.')
 
-    # Check the values of the parameters
+    # Check the values of the parameters (never include the values in the messages)
     if len(aes_key) != 32:
-        raise ValueError(f'{aes_key=} is not 64 bytes long.') 
+        raise ValueError('Parameter aes_key must be 32 bytes long.')
     if len(iv) != 16:
-        raise ValueError(f'{iv=} is not 16 bytes long.')
-    
-    # Decrypt the data using AES in CBC mode
-    cipher = ciphers.Cipher(ciphers.algorithms.AES(aes_key), ciphers.modes.CBC(iv), backend=default_backend())
-    decryptor = cipher.decryptor()
-    unpadder = padding.PKCS7(128).unpadder()  
-    decrypted_data = decryptor.update(cipherdata) + decryptor.finalize() 
-    unpadded_data = bytearray(unpadder.update(decrypted_data) + unpadder.finalize())
+        raise ValueError('Parameter iv must be 16 bytes long.')
+    if len(cipherdata) == 0 or len(cipherdata) % 16 != 0:
+        raise ValueError('Parameter cipherdata length must be a positive multiple of 16.')
 
-    # Returning the decrypted clear data
-    return unpadded_data
+    buffer = None
+    try:
+        # Decrypt directly into a mutable buffer (no immutable copy of the padded cleardata)
+        cipher = ciphers.Cipher(ciphers.algorithms.AES256(aes_key), ciphers.modes.CBC(iv))
+        decryptor = cipher.decryptor()
+        buffer = bytearray(len(cipherdata) + 15)  # size required by update_into
+        written = decryptor.update_into(cipherdata, buffer)
+        decryptor.finalize()
+
+        # Remove the PKCS7 padding (raises ValueError if invalid)
+        unpadder = padding.PKCS7(128).unpadder()
+        cleardata = bytearray(unpadder.update(memoryview(buffer)[:written]))
+        cleardata += unpadder.finalize()
+        return cleardata
+
+    finally:
+        if buffer is not None:
+            delete_bytearray(buffer)

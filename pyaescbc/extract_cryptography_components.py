@@ -12,11 +12,37 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Tuple
+from typing import NamedTuple
 
-def extract_cryptography_components(encrypted_bundle: bytearray) -> Tuple[bytearray, bytearray, bytearray, bytearray]:
-    """
-    Extracts the IV, salt, expected HMAC, and cipherdata from the encrypted bundle.
+from .create_encrypted_bundle import (
+    _PREFIX, MAGIC, VERSION, SALT_SIZE, IV_SIZE, HMAC_SIZE, BLOCK_SIZE,
+    HEADER_SIZE, MIN_BUNDLE_SIZE,
+)
+from .derive_key import MIN_ITERATIONS, MAX_ITERATIONS
+
+
+class BundleComponents(NamedTuple):
+    """Components of a version 2 encrypted bundle (all byte fields are copies)."""
+    header: bytearray         # the exact header bytes, to be passed to create_hmac
+    iterations: int
+    salt: bytearray
+    iv: bytearray
+    expected_hmac: bytearray
+    cipherdata: bytearray
+
+
+def extract_cryptography_components(encrypted_bundle: bytearray) -> BundleComponents:
+    r"""
+    Parses and validates a version 2 encrypted bundle.
+
+    The structure of the bundle is validated (magic, version, iteration bounds, lengths)
+    BEFORE any key derivation, so that a malformed or malicious bundle is rejected cheaply.
+    The data is NOT authenticated by this function: the HMAC must be checked afterwards.
+
+    .. code-block:: text
+
+        encrypted_bundle = magic (4) | version (1) | iterations (4) | salt (32) | iv (16)
+                         | hmac (32) | cipherdata (16*n)
 
     .. seealso::
 
@@ -25,31 +51,47 @@ def extract_cryptography_components(encrypted_bundle: bytearray) -> Tuple[bytear
     Parameters
     ----------
     encrypted_bundle : bytearray
-        The encrypted bundle. Must contain at least 80 bytes.
+        The encrypted bundle. It is not modified.
 
     Returns
     -------
-    tuple
-        A tuple containing the IV, salt, expected HMAC, and cipherdata.
+    BundleComponents
+        Named tuple ``(header, iterations, salt, iv, expected_hmac, cipherdata)``.
+        ``header`` is the exact byte sequence to authenticate with :func:`pyaescbc.create_hmac`.
 
     Raises
     ------
     TypeError
         If the argument is not a ``bytearray`` instance.
     ValueError
-        If the bytearray does not contain at least 80 bytes.
+        If the bundle is malformed, has an unknown magic or version, or its iteration
+        count is out of the allowed range.
     """
     # Check the types of the parameters
     if not isinstance(encrypted_bundle, bytearray):
         raise TypeError('Parameter encrypted_bundle is not bytearray instance.')
-    
-    # Check the value of the parameters
-    if len(encrypted_bundle) < 80:
-        raise ValueError(f'encrypted_bundle does not contain more than 80 bytes.') 
 
-    # Extract the components
-    iv = encrypted_bundle[0:16]
-    salt = encrypted_bundle[16:48]
-    expected_hmac = encrypted_bundle[48:80]
-    cipherdata = encrypted_bundle[80:]
-    return iv, salt, expected_hmac, cipherdata
+    # Check the structure of the bundle
+    if len(encrypted_bundle) < MIN_BUNDLE_SIZE:
+        raise ValueError('Invalid encrypted bundle: too short.')
+    if (len(encrypted_bundle) - HEADER_SIZE - HMAC_SIZE) % BLOCK_SIZE != 0:
+        raise ValueError('Invalid encrypted bundle: cipherdata length is not a multiple of 16.')
+
+    magic, version, iterations = _PREFIX.unpack_from(encrypted_bundle, 0)
+    if magic != MAGIC:
+        raise ValueError('Invalid encrypted bundle: unknown format (legacy v1 bundle?).')
+    if version != VERSION:
+        raise ValueError(f'Invalid encrypted bundle: unsupported version {version}.')
+    if not MIN_ITERATIONS <= iterations <= MAX_ITERATIONS:
+        raise ValueError('Invalid encrypted bundle: iterations out of the allowed range.')
+
+    # Extract the components (slices of a bytearray are independent bytearray copies)
+    offset = _PREFIX.size
+    salt = encrypted_bundle[offset:offset + SALT_SIZE]
+    offset += SALT_SIZE
+    iv = encrypted_bundle[offset:offset + IV_SIZE]
+    header = encrypted_bundle[:HEADER_SIZE]
+    expected_hmac = encrypted_bundle[HEADER_SIZE:HEADER_SIZE + HMAC_SIZE]
+    cipherdata = encrypted_bundle[HEADER_SIZE + HMAC_SIZE:]
+
+    return BundleComponents(header, iterations, salt, iv, expected_hmac, cipherdata)

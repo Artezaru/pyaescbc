@@ -12,26 +12,55 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 from cryptography.hazmat.primitives import hashes
-from cryptography.hazmat.backends import default_backend
+from cryptography.hazmat.primitives.kdf.hkdf import HKDFExpand
+from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
+
+
+#: Minimum number of PBKDF2 iterations accepted (prevents weak settings).
+MIN_ITERATIONS = 100_000
+
+#: Maximum number of PBKDF2 iterations accepted (prevents denial of service
+#: when the iteration count is read from an untrusted bundle).
+MAX_ITERATIONS = 100_000_000
+
+# Context labels for HKDF: each label yields an independent key.
+_INFO_AES = b"pyaescbc v2 aes-256-cbc key"
+_INFO_HMAC = b"pyaescbc v2 hmac-sha256 key"
+
 
 def derive_key(password: bytearray, salt: bytearray, iterations: int) -> bytearray:
-    """
-    Derives a 64-byte key from a password using PBKDF2HMAC.
-    The algorithm used is SHA256.
+    r"""
+    Derives the 64-byte key material (AES key + HMAC key) from a password.
 
-    The derived key is composed by the AES key and the HMAC key, both 32 bytes long.
-    The AES key is used to encrypt or decrypt the data using AES in CBC mode.
-    The HMAC key is used to create the HMAC to verify the integrity of the data.
+    The derivation is done in two steps:
 
-    By default, the input parameters are deleted from memory at the end of the function.
+    1. A 32-byte master key is derived from the password with PBKDF2-HMAC-SHA256
+       (the slow, brute-force resistant step).
+    2. Two independent 32-byte keys are expanded from the master key with HKDF-SHA256,
+       using distinct context labels (the fast, key separation step).
+
+    .. code-block:: text
+
+        master_key = PBKDF2-HMAC-SHA256(password, salt, iterations, 32)
+        aes_key    = HKDF-Expand-SHA256(master_key, "pyaescbc v2 aes-256-cbc key", 32)
+        hmac_key   = HKDF-Expand-SHA256(master_key, "pyaescbc v2 hmac-sha256 key", 32)
+        derived_key = aes_key || hmac_key
+
+    Deriving a single 32-byte PBKDF2 output (instead of 64) ensures that an attacker
+    has to perform exactly the same amount of work as the legitimate user for each
+    password guess.
 
     .. seealso::
 
-        -function :func:`pyaescbc.encrypt_AES_CBC` to encrypt the data using AES in CBC mode.
-        -function :func:`pyaescbc.decrypt_AES_CBC` to decrypt the data using AES in CBC mode.
-        -function :func:`pyaescbc.create_hmac` to create the HMAC of the data.
+        - function :func:`pyaescbc.encrypt_AES_CBC` to encrypt the data using AES in CBC mode.
+        - function :func:`pyaescbc.decrypt_AES_CBC` to decrypt the data using AES in CBC mode.
+        - function :func:`pyaescbc.create_hmac` to create the HMAC of the data.
+
+    .. note::
+
+        This function does not modify or delete its inputs. Intermediate values produced
+        by the ``cryptography`` library are immutable ``bytes`` and cannot be wiped.
 
     Parameters
     ----------
@@ -39,44 +68,52 @@ def derive_key(password: bytearray, salt: bytearray, iterations: int) -> bytearr
         The user password. It must not be empty.
 
     salt : bytearray
-        The 32-byte salt used to generate the derived key.
+        The 32-byte random salt (see :func:`pyaescbc.random_salt`).
 
     iterations : int
-        The number of iterations for PBKDF2. It must be a strictly positive integer.
+        The number of PBKDF2 iterations, between ``MIN_ITERATIONS`` (100 000)
+        and ``MAX_ITERATIONS`` (100 000 000).
 
     Returns
     -------
     derived_key : bytearray
-        The derived 64-byte key.
+        The derived 64-byte key: ``derived_key[:32]`` is the AES key and
+        ``derived_key[32:]`` is the HMAC key.
 
     Raises
     ------
     TypeError
         If the arguments are not of the correct types.
     ValueError
-        If ``iterations`` is not a strictly positive integer, ``salt`` is not 32 bytes long, or ``password`` is empty.
+        If ``password`` is empty, ``salt`` is not 32 bytes long, or ``iterations``
+        is out of the allowed range.
     """
-    # Check the types of the parameters
+    # Check the types of the parameters (bool is a subclass of int and must be rejected)
     if not isinstance(password, bytearray):
         raise TypeError('Parameter password is not bytearray instance.')
     if not isinstance(salt, bytearray):
         raise TypeError('Parameter salt is not bytearray instance.')
-    if not isinstance(iterations, int):
+    if not isinstance(iterations, int) or isinstance(iterations, bool):
         raise TypeError('Parameter iterations is not int instance.')
 
-    # Check the values of the parameters
+    # Check the values of the parameters (never include the values in the messages)
     if len(password) == 0:
         raise ValueError('Parameter password must not be empty.')
-    if iterations <= 0:
-        raise ValueError('Parameter iterations must be a positive integer.')
     if len(salt) != 32:
-        raise ValueError(f'{salt=} is not 32 bytes long.') 
+        raise ValueError('Parameter salt must be 32 bytes long.')
+    if not MIN_ITERATIONS <= iterations <= MAX_ITERATIONS:
+        raise ValueError(f'Parameter iterations must be between {MIN_ITERATIONS} and {MAX_ITERATIONS}.')
 
-    # Derive the key using PBKDF2HMAC
-    kdf = PBKDF2HMAC(algorithm=hashes.SHA256(),
-                     length=64,  # 32 bytes for AES + 32 bytes for HMAC
-                     salt=bytes(salt),
-                     iterations=iterations,
-                     backend=default_backend())
-    derived_key = bytearray(kdf.derive(password))
+    # Step 1: slow derivation of a single 32-byte master key
+    master_key = PBKDF2HMAC(
+        algorithm=hashes.SHA256(),
+        length=32,
+        salt=bytes(salt),  # the salt is public, the library requires bytes
+        iterations=iterations,
+    ).derive(password)
+
+    # Step 2: fast expansion into two independent keys
+    derived_key = bytearray(64)
+    derived_key[:32] = HKDFExpand(algorithm=hashes.SHA256(), length=32, info=_INFO_AES).derive(master_key)
+    derived_key[32:] = HKDFExpand(algorithm=hashes.SHA256(), length=32, info=_INFO_HMAC).derive(master_key)
     return derived_key

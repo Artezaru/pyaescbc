@@ -13,14 +13,26 @@
 # limitations under the License.
 
 from cryptography.hazmat.primitives import padding, ciphers
-from cryptography.hazmat.backends import default_backend
+from .delete_bytearray import delete_bytearray
 
 def encrypt_AES_CBC(cleardata: bytearray, aes_key: bytearray, iv: bytearray) -> bytearray:
     r"""
-    Encrypts a cleardata message using AES in CBC mode.
+    Encrypts a cleardata message using AES-256 in CBC mode.
 
-    The cleardata is padded using PKCS7 padding and then encrypted using AES in CBC mode.
-    The aes_key is the first 32 bytes of the derived key, and the iv is the initialization vector.
+    The cleardata is padded using PKCS7 padding and then encrypted using AES-256 in CBC mode.
+
+    To limit copies of the cleardata in memory, the complete blocks are encrypted directly
+    from ``cleardata`` and only the last (partial) block goes through the PKCS7 padder.
+
+    .. warning::
+
+        This function does not authenticate the data. An HMAC of the ``iv`` and the returned
+        ``cipherdata`` MUST be computed (Encrypt-then-MAC) before storing or sending it.
+
+    .. warning::
+
+        The ``iv`` must be freshly generated with a CSPRNG for every encryption
+        (see :func:`pyaescbc.random_iv`) and never reused with the same key.
 
     .. seealso::
 
@@ -36,15 +48,15 @@ def encrypt_AES_CBC(cleardata: bytearray, aes_key: bytearray, iv: bytearray) -> 
         The message to encrypt using AES in CBC mode.
 
     aes_key : bytearray
-        The 32-byte AES key derived from the password, salt and iterations.
+        The 32-byte AES key.
 
     iv : bytearray
         The 16-byte initialization vector (IV) to use in AES-CBC mode.
 
     Returns
     -------
-    cipherdata: bytearray
-        The encrypted message.
+    cipherdata : bytearray
+        The encrypted message. Its length is a positive multiple of 16.
 
     Raises
     ------
@@ -61,16 +73,31 @@ def encrypt_AES_CBC(cleardata: bytearray, aes_key: bytearray, iv: bytearray) -> 
     if not isinstance(iv, bytearray):
         raise TypeError('Parameter iv is not bytearray instance.')
 
-    # Check the values of the parameters
+    # Check the values of the parameters (never include the values in the messages)
     if len(aes_key) != 32:
-        raise ValueError(f'{aes_key=} is not 32 bytes long.') 
+        raise ValueError('Parameter aes_key must be 32 bytes long.')
     if len(iv) != 16:
-        raise ValueError(f'{iv=} is not 16 bytes long.')
-    
-    # Encrypt the data using AES in CBC mode
-    padder = padding.PKCS7(128).padder()  
-    cipher = ciphers.Cipher(ciphers.algorithms.AES(aes_key), ciphers.modes.CBC(iv), backend=default_backend())
-    encryptor = cipher.encryptor()
-    padded_data = padder.update(cleardata) + padder.finalize()
-    cipherdata = bytearray(encryptor.update(padded_data) + encryptor.finalize())
-    return cipherdata
+        raise ValueError('Parameter iv must be 16 bytes long.')
+
+    last_block = None
+    try:
+        cipher = ciphers.Cipher(ciphers.algorithms.AES256(aes_key), ciphers.modes.CBC(iv))
+        encryptor = cipher.encryptor()
+
+        # Encrypt all complete blocks directly from cleardata (no copy of the cleardata)
+        full_len = len(cleardata) - (len(cleardata) % 16)
+        cipherdata = bytearray(encryptor.update(memoryview(cleardata)[:full_len]))
+
+        # Pad only the remaining 0-15 bytes into a mutable 16-byte block
+        padder = padding.PKCS7(128).padder()
+        last_block = bytearray(padder.update(memoryview(cleardata)[full_len:]))
+        last_block += padder.finalize()
+
+        # Encrypt the last block
+        cipherdata += encryptor.update(last_block)
+        cipherdata += encryptor.finalize()
+        return cipherdata
+
+    finally:
+        if last_block is not None:
+            delete_bytearray(last_block)

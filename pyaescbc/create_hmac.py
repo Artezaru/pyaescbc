@@ -12,70 +12,83 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import hmac
 import hashlib
+import hmac
+import struct
 from typing import Optional
 
-def create_hmac(hmac_key: bytearray, iv: bytearray, cipherdata: bytearray, authdata: Optional[bytearray] = None) -> bytearray:
-    """
-    Creates the expected HMAC using the hmac_key on the iv, cipherdata, and optional auth_data.
-    The HMAC is created using the SHA-256 hash function. The HMAC is used to verify the integrity of the encrypted message.
-    The hmac_key is extracted from the derived key, which is created using PBKDF2HMAC.
 
-    .. code-block:: console
+def create_hmac(hmac_key: bytearray, header: bytearray, cipherdata: bytearray, authdata: Optional[bytearray] = None) -> bytearray:
+    r"""
+    Creates the HMAC-SHA256 tag authenticating the header, the cipherdata and the optional authdata.
 
-        HMAC = HMAC(key, SHA256(iv + cipherdata + authdata))
+    Each field is prefixed with its length encoded as an 8-byte big-endian unsigned integer.
+    This makes the encoding unambiguous: bytes cannot be moved from one field to another
+    (for example from the end of ``cipherdata`` to the beginning of ``authdata``) without
+    changing the tag.
+
+    .. code-block:: text
+
+        tag = HMAC-SHA256(hmac_key, len(header) || header || len(cipherdata) || cipherdata || len(authdata) || authdata)
+
+    The ``header`` must contain every public parameter needed to decrypt the bundle
+    (version, iterations, salt, iv, ...) so that none of them can be tampered with.
+
+    .. note::
+
+        ``authdata=None`` and an empty ``authdata`` produce the same tag.
 
     .. seealso::
 
-        -function :func:`pyaescbc.derive_key` to create the derived key.
+        - function :func:`pyaescbc.derive_key` to create the HMAC key.
+        - function :func:`pyaescbc.check_hmac` to compare two tags in constant time.
 
     Parameters
     ----------
     hmac_key : bytearray
-        The 32-byte long key used to create the HMAC. It is extracted from the derived key.
+        The 32-byte key used to create the HMAC (``derived_key[32:]``).
 
-    iv : bytearray
-        The 16-byte long initialization vector used for encryption.
+    header : bytearray
+        The public header of the encrypted bundle (everything before the cipherdata).
 
     cipherdata : bytearray
         The encrypted message.
 
     authdata : Optional[bytearray]
-        Optional additional authentication data. If provided, it is prepended to the HMAC input.
+        Optional additional authenticated data (not encrypted, not stored in the bundle).
 
     Returns
     -------
     expected_hmac : bytearray
-        The 32-byte expected HMAC value.
+        The 32-byte HMAC tag.
 
     Raises
     ------
     TypeError
         If any argument is not a ``bytearray`` instance.
-
     ValueError
-        If the hmac_key isn't 32 bytes, the IV isn't 16 bytes.
+        If ``hmac_key`` isn't 32 bytes long.
     """
     # Check the types of the parameters
     if not isinstance(hmac_key, bytearray):
         raise TypeError('Parameter hmac_key is not bytearray instance.')
-    if not isinstance(iv, bytearray):
-        raise TypeError('Parameter iv is not bytearray instance.')
+    if not isinstance(header, bytearray):
+        raise TypeError('Parameter header is not bytearray instance.')
     if not isinstance(cipherdata, bytearray):
         raise TypeError('Parameter cipherdata is not bytearray instance.')
     if authdata is not None and not isinstance(authdata, bytearray):
         raise TypeError('Parameter authdata is not bytearray instance.')
-    
-    # Check the value of the parameters
-    if len(hmac_key) != 32:
-        raise ValueError(f'{hmac_key=} is not 32 bytes long.') 
-    if len(iv) != 16:
-        raise ValueError(f'{iv=} is not 16 bytes long.')
 
-    # Create the HMAC
+    # Check the values of the parameters (never include the values in the messages)
+    if len(hmac_key) != 32:
+        raise ValueError('Parameter hmac_key must be 32 bytes long.')
+
     if authdata is None:
         authdata = bytearray()
-    expected_hmac = bytearray(hmac.new(hmac_key, iv + cipherdata + authdata, hashlib.sha256).digest())
 
-    return expected_hmac
+    # Create the HMAC incrementally (no concatenated copy of the inputs)
+    mac = hmac.new(hmac_key, digestmod=hashlib.sha256)
+    for field in (header, cipherdata, authdata):
+        mac.update(struct.pack('>Q', len(field)))
+        mac.update(field)
+    return bytearray(mac.digest())
