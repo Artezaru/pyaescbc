@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>pyaescbc.derive_key &#8212; pyaescbc 1.0.0 documentation</title>
+    <title>pyaescbc.derive_key &#8212; pyaescbc 2.0.0 documentation</title>
   
   
   
@@ -37,7 +37,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=a95f357e85573c9b56d5" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=a95f357e85573c9b56d5" />
 
-    <script src="../../_static/documentation_options.js?v=8d563738"></script>
+    <script src="../../_static/documentation_options.js?v=51b770b3"></script>
     <script src="../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/pyaescbc/derive_key';</script>
@@ -114,7 +114,7 @@
   
   
   
-    <p class="title logo__title">pyaescbc 1.0.0 documentation</p>
+    <p class="title logo__title">pyaescbc 2.0.0 documentation</p>
   
 </a></div>
     
@@ -345,28 +345,57 @@
 <span class="c1"># See the License for the specific language governing permissions and</span>
 <span class="c1"># limitations under the License.</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">cryptography.hazmat.primitives.kdf.pbkdf2</span><span class="w"> </span><span class="kn">import</span> <span class="n">PBKDF2HMAC</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">cryptography.hazmat.primitives</span><span class="w"> </span><span class="kn">import</span> <span class="n">hashes</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">cryptography.hazmat.backends</span><span class="w"> </span><span class="kn">import</span> <span class="n">default_backend</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">cryptography.hazmat.primitives.kdf.hkdf</span><span class="w"> </span><span class="kn">import</span> <span class="n">HKDFExpand</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">cryptography.hazmat.primitives.kdf.pbkdf2</span><span class="w"> </span><span class="kn">import</span> <span class="n">PBKDF2HMAC</span>
+
+
+<span class="c1">#: Minimum number of PBKDF2 iterations accepted (prevents weak settings).</span>
+<span class="n">MIN_ITERATIONS</span> <span class="o">=</span> <span class="mi">100_000</span>
+
+<span class="c1">#: Maximum number of PBKDF2 iterations accepted (prevents denial of service</span>
+<span class="c1">#: when the iteration count is read from an untrusted bundle).</span>
+<span class="n">MAX_ITERATIONS</span> <span class="o">=</span> <span class="mi">100_000_000</span>
+
+<span class="c1"># Context labels for HKDF: each label yields an independent key.</span>
+<span class="n">_INFO_AES</span> <span class="o">=</span> <span class="sa">b</span><span class="s2">"pyaescbc v2 aes-256-cbc key"</span>
+<span class="n">_INFO_HMAC</span> <span class="o">=</span> <span class="sa">b</span><span class="s2">"pyaescbc v2 hmac-sha256 key"</span>
+
 
 <div class="viewcode-block" id="derive_key">
 <a class="viewcode-back" href="../../api.html#pyaescbc.derive_key">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">derive_key</span><span class="p">(</span><span class="n">password</span><span class="p">:</span> <span class="nb">bytearray</span><span class="p">,</span> <span class="n">salt</span><span class="p">:</span> <span class="nb">bytearray</span><span class="p">,</span> <span class="n">iterations</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytearray</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""</span>
-<span class="sd">    Derives a 64-byte key from a password using PBKDF2HMAC.</span>
-<span class="sd">    The algorithm used is SHA256.</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">"""</span>
+<span class="sd">    Derives the 64-byte key material (AES key + HMAC key) from a password.</span>
 
-<span class="sd">    The derived key is composed by the AES key and the HMAC key, both 32 bytes long.</span>
-<span class="sd">    The AES key is used to encrypt or decrypt the data using AES in CBC mode.</span>
-<span class="sd">    The HMAC key is used to create the HMAC to verify the integrity of the data.</span>
+<span class="sd">    The derivation is done in two steps:</span>
 
-<span class="sd">    By default, the input parameters are deleted from memory at the end of the function.</span>
+<span class="sd">    1. A 32-byte master key is derived from the password with PBKDF2-HMAC-SHA256</span>
+<span class="sd">       (the slow, brute-force resistant step).</span>
+<span class="sd">    2. Two independent 32-byte keys are expanded from the master key with HKDF-SHA256,</span>
+<span class="sd">       using distinct context labels (the fast, key separation step).</span>
+
+<span class="sd">    .. code-block:: text</span>
+
+<span class="sd">        master_key = PBKDF2-HMAC-SHA256(password, salt, iterations, 32)</span>
+<span class="sd">        aes_key    = HKDF-Expand-SHA256(master_key, "pyaescbc v2 aes-256-cbc key", 32)</span>
+<span class="sd">        hmac_key   = HKDF-Expand-SHA256(master_key, "pyaescbc v2 hmac-sha256 key", 32)</span>
+<span class="sd">        derived_key = aes_key || hmac_key</span>
+
+<span class="sd">    Deriving a single 32-byte PBKDF2 output (instead of 64) ensures that an attacker</span>
+<span class="sd">    has to perform exactly the same amount of work as the legitimate user for each</span>
+<span class="sd">    password guess.</span>
 
 <span class="sd">    .. seealso::</span>
 
-<span class="sd">        -function :func:`pyaescbc.encrypt_AES_CBC` to encrypt the data using AES in CBC mode.</span>
-<span class="sd">        -function :func:`pyaescbc.decrypt_AES_CBC` to decrypt the data using AES in CBC mode.</span>
-<span class="sd">        -function :func:`pyaescbc.create_hmac` to create the HMAC of the data.</span>
+<span class="sd">        - function :func:`pyaescbc.encrypt_AES_CBC` to encrypt the data using AES in CBC mode.</span>
+<span class="sd">        - function :func:`pyaescbc.decrypt_AES_CBC` to decrypt the data using AES in CBC mode.</span>
+<span class="sd">        - function :func:`pyaescbc.create_hmac` to create the HMAC of the data.</span>
+
+<span class="sd">    .. note::</span>
+
+<span class="sd">        This function does not modify or delete its inputs. Intermediate values produced</span>
+<span class="sd">        by the ``cryptography`` library are immutable ``bytes`` and cannot be wiped.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -374,46 +403,54 @@
 <span class="sd">        The user password. It must not be empty.</span>
 
 <span class="sd">    salt : bytearray</span>
-<span class="sd">        The 32-byte salt used to generate the derived key.</span>
+<span class="sd">        The 32-byte random salt (see :func:`pyaescbc.random_salt`).</span>
 
 <span class="sd">    iterations : int</span>
-<span class="sd">        The number of iterations for PBKDF2. It must be a strictly positive integer.</span>
+<span class="sd">        The number of PBKDF2 iterations, between ``MIN_ITERATIONS`` (100 000)</span>
+<span class="sd">        and ``MAX_ITERATIONS`` (100 000 000).</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    derived_key : bytearray</span>
-<span class="sd">        The derived 64-byte key.</span>
+<span class="sd">        The derived 64-byte key: ``derived_key[:32]`` is the AES key and</span>
+<span class="sd">        ``derived_key[32:]`` is the HMAC key.</span>
 
 <span class="sd">    Raises</span>
 <span class="sd">    ------</span>
 <span class="sd">    TypeError</span>
 <span class="sd">        If the arguments are not of the correct types.</span>
 <span class="sd">    ValueError</span>
-<span class="sd">        If ``iterations`` is not a strictly positive integer, ``salt`` is not 32 bytes long, or ``password`` is empty.</span>
+<span class="sd">        If ``password`` is empty, ``salt`` is not 32 bytes long, or ``iterations``</span>
+<span class="sd">        is out of the allowed range.</span>
 <span class="sd">    """</span>
-    <span class="c1"># Check the types of the parameters</span>
+    <span class="c1"># Check the types of the parameters (bool is a subclass of int and must be rejected)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">password</span><span class="p">,</span> <span class="nb">bytearray</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">'Parameter password is not bytearray instance.'</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">salt</span><span class="p">,</span> <span class="nb">bytearray</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">'Parameter salt is not bytearray instance.'</span><span class="p">)</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">iterations</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">iterations</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">iterations</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">'Parameter iterations is not int instance.'</span><span class="p">)</span>
 
-    <span class="c1"># Check the values of the parameters</span>
+    <span class="c1"># Check the values of the parameters (never include the values in the messages)</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">password</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'Parameter password must not be empty.'</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">iterations</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'Parameter iterations must be a positive integer.'</span><span class="p">)</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">salt</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">32</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">salt</span><span class="si">=}</span><span class="s1"> is not 32 bytes long.'</span><span class="p">)</span> 
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'Parameter salt must be 32 bytes long.'</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">MIN_ITERATIONS</span> <span class="o">&lt;=</span> <span class="n">iterations</span> <span class="o">&lt;=</span> <span class="n">MAX_ITERATIONS</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">'Parameter iterations must be between </span><span class="si">{</span><span class="n">MIN_ITERATIONS</span><span class="si">}</span><span class="s1"> and </span><span class="si">{</span><span class="n">MAX_ITERATIONS</span><span class="si">}</span><span class="s1">.'</span><span class="p">)</span>
 
-    <span class="c1"># Derive the key using PBKDF2HMAC</span>
-    <span class="n">kdf</span> <span class="o">=</span> <span class="n">PBKDF2HMAC</span><span class="p">(</span><span class="n">algorithm</span><span class="o">=</span><span class="n">hashes</span><span class="o">.</span><span class="n">SHA256</span><span class="p">(),</span>
-                     <span class="n">length</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span>  <span class="c1"># 32 bytes for AES + 32 bytes for HMAC</span>
-                     <span class="n">salt</span><span class="o">=</span><span class="nb">bytes</span><span class="p">(</span><span class="n">salt</span><span class="p">),</span>
-                     <span class="n">iterations</span><span class="o">=</span><span class="n">iterations</span><span class="p">,</span>
-                     <span class="n">backend</span><span class="o">=</span><span class="n">default_backend</span><span class="p">())</span>
-    <span class="n">derived_key</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">(</span><span class="n">kdf</span><span class="o">.</span><span class="n">derive</span><span class="p">(</span><span class="n">password</span><span class="p">))</span>
+    <span class="c1"># Step 1: slow derivation of a single 32-byte master key</span>
+    <span class="n">master_key</span> <span class="o">=</span> <span class="n">PBKDF2HMAC</span><span class="p">(</span>
+        <span class="n">algorithm</span><span class="o">=</span><span class="n">hashes</span><span class="o">.</span><span class="n">SHA256</span><span class="p">(),</span>
+        <span class="n">length</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span>
+        <span class="n">salt</span><span class="o">=</span><span class="nb">bytes</span><span class="p">(</span><span class="n">salt</span><span class="p">),</span>  <span class="c1"># the salt is public, the library requires bytes</span>
+        <span class="n">iterations</span><span class="o">=</span><span class="n">iterations</span><span class="p">,</span>
+    <span class="p">)</span><span class="o">.</span><span class="n">derive</span><span class="p">(</span><span class="n">password</span><span class="p">)</span>
+
+    <span class="c1"># Step 2: fast expansion into two independent keys</span>
+    <span class="n">derived_key</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">(</span><span class="mi">64</span><span class="p">)</span>
+    <span class="n">derived_key</span><span class="p">[:</span><span class="mi">32</span><span class="p">]</span> <span class="o">=</span> <span class="n">HKDFExpand</span><span class="p">(</span><span class="n">algorithm</span><span class="o">=</span><span class="n">hashes</span><span class="o">.</span><span class="n">SHA256</span><span class="p">(),</span> <span class="n">length</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="n">_INFO_AES</span><span class="p">)</span><span class="o">.</span><span class="n">derive</span><span class="p">(</span><span class="n">master_key</span><span class="p">)</span>
+    <span class="n">derived_key</span><span class="p">[</span><span class="mi">32</span><span class="p">:]</span> <span class="o">=</span> <span class="n">HKDFExpand</span><span class="p">(</span><span class="n">algorithm</span><span class="o">=</span><span class="n">hashes</span><span class="o">.</span><span class="n">SHA256</span><span class="p">(),</span> <span class="n">length</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="n">_INFO_HMAC</span><span class="p">)</span><span class="o">.</span><span class="n">derive</span><span class="p">(</span><span class="n">master_key</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">derived_key</span></div>
 
 </pre></div>

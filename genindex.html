@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Index &#8212; pyaescbc 1.0.0 documentation</title>
+    <title>Index &#8212; pyaescbc 2.0.0 documentation</title>
   
   
   
@@ -37,7 +37,7 @@
   <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=a95f357e85573c9b56d5" />
 <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=a95f357e85573c9b56d5" />
 
-    <script src="_static/documentation_options.js?v=8d563738"></script>
+    <script src="_static/documentation_options.js?v=51b770b3"></script>
     <script src="_static/doctools.js?v=9bcbadda"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'genindex';</script>
@@ -114,7 +114,7 @@
   
   
   
-    <p class="title logo__title">pyaescbc 1.0.0 documentation</p>
+    <p class="title logo__title">pyaescbc 2.0.0 documentation</p>
   
 </a></div>
     
@@ -309,11 +309,15 @@
 <div class="genindex-jumpbox">
  <a href="#_"><strong>_</strong></a>
  | <a href="#A"><strong>A</strong></a>
+ | <a href="#B"><strong>B</strong></a>
  | <a href="#C"><strong>C</strong></a>
  | <a href="#D"><strong>D</strong></a>
  | <a href="#E"><strong>E</strong></a>
- | <a href="#G"><strong>G</strong></a>
+ | <a href="#H"><strong>H</strong></a>
+ | <a href="#I"><strong>I</strong></a>
+ | <a href="#M"><strong>M</strong></a>
  | <a href="#R"><strong>R</strong></a>
+ | <a href="#S"><strong>S</strong></a>
  
 </div>
 <h2 id="_">_</h2>
@@ -332,13 +336,25 @@
   </ul></td>
 </tr></table>
 
+<h2 id="B">B</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api.html#pyaescbc.BundleComponents">BundleComponents (class in pyaescbc)</a>
+</li>
+  </ul></td>
+</tr></table>
+
 <h2 id="C">C</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api.html#pyaescbc.check_hmac">check_hmac() (in module pyaescbc)</a>
 </li>
+      <li><a href="api.html#pyaescbc.BundleComponents.cipherdata">cipherdata (pyaescbc.BundleComponents attribute)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api.html#pyaescbc.create_bundle_header">create_bundle_header() (in module pyaescbc)</a>
+</li>
       <li><a href="api.html#pyaescbc.create_encrypted_bundle">create_encrypted_bundle() (in module pyaescbc)</a>
 </li>
       <li><a href="api.html#pyaescbc.create_hmac">create_hmac() (in module pyaescbc)</a>
@@ -351,7 +367,7 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api.html#pyaescbc.decrypt">decrypt() (in module pyaescbc)</a>
 </li>
-      <li><a href="api.html#pyaescbc.decrypt_AES_CBC">decrypt_AES_CBC() (in module pyaescbc)</a>
+      <li><a href="api.html#pyaescbc.DEFAULT_ITERATIONS">DEFAULT_ITERATIONS (in module pyaescbc)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
@@ -369,21 +385,41 @@
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api.html#pyaescbc.encrypt_AES_CBC">encrypt_AES_CBC() (in module pyaescbc)</a>
+      <li><a href="api.html#pyaescbc.BundleComponents.expected_hmac">expected_hmac (pyaescbc.BundleComponents attribute)</a>
 </li>
       <li><a href="api.html#pyaescbc.extract_cryptography_components">extract_cryptography_components() (in module pyaescbc)</a>
 </li>
   </ul></td>
 </tr></table>
 
-<h2 id="G">G</h2>
+<h2 id="H">H</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api.html#pyaescbc.generate_pin_iterations">generate_pin_iterations() (in module pyaescbc)</a>
+      <li><a href="api.html#pyaescbc.BundleComponents.header">header (pyaescbc.BundleComponents attribute)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="I">I</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api.html#pyaescbc.BundleComponents.iterations">iterations (pyaescbc.BundleComponents attribute)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api.html#pyaescbc.generate_random_iterations">generate_random_iterations() (in module pyaescbc)</a>
+      <li><a href="api.html#pyaescbc.BundleComponents.iv">iv (pyaescbc.BundleComponents attribute)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="M">M</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api.html#pyaescbc.MAX_ITERATIONS">MAX_ITERATIONS (in module pyaescbc)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api.html#pyaescbc.MIN_ITERATIONS">MIN_ITERATIONS (in module pyaescbc)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -398,6 +434,14 @@
       <li><a href="api.html#pyaescbc.random_iv">random_iv() (in module pyaescbc)</a>
 </li>
       <li><a href="api.html#pyaescbc.random_salt">random_salt() (in module pyaescbc)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="S">S</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api.html#pyaescbc.BundleComponents.salt">salt (pyaescbc.BundleComponents attribute)</a>
 </li>
   </ul></td>
 </tr></table>

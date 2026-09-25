@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>pyaescbc.create_encrypted_bundle &#8212; pyaescbc 1.0.0 documentation</title>
+    <title>pyaescbc.create_encrypted_bundle &#8212; pyaescbc 2.0.0 documentation</title>
   
   
   
@@ -37,7 +37,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=a95f357e85573c9b56d5" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=a95f357e85573c9b56d5" />
 
-    <script src="../../_static/documentation_options.js?v=8d563738"></script>
+    <script src="../../_static/documentation_options.js?v=51b770b3"></script>
     <script src="../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/pyaescbc/create_encrypted_bundle';</script>
@@ -114,7 +114,7 @@
   
   
   
-    <p class="title logo__title">pyaescbc 1.0.0 documentation</p>
+    <p class="title logo__title">pyaescbc 2.0.0 documentation</p>
   
 </a></div>
     
@@ -345,65 +345,148 @@
 <span class="c1"># See the License for the specific language governing permissions and</span>
 <span class="c1"># limitations under the License.</span>
 
-<div class="viewcode-block" id="create_encrypted_bundle">
-<a class="viewcode-back" href="../../api.html#pyaescbc.create_encrypted_bundle">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">create_encrypted_bundle</span><span class="p">(</span><span class="n">iv</span><span class="p">:</span> <span class="nb">bytearray</span><span class="p">,</span> <span class="n">salt</span><span class="p">:</span> <span class="nb">bytearray</span><span class="p">,</span> <span class="n">expected_hmac</span><span class="p">:</span> <span class="nb">bytearray</span><span class="p">,</span> <span class="n">cipherdata</span><span class="p">:</span> <span class="nb">bytearray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytearray</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""</span>
-<span class="sd">    Creates a bytearray containing all the information needed to decrypt the data.</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">struct</span>
 
-<span class="sd">    The encrypted bundle is composed by the initialization vector (IV), the salt, the expected HMAC and the cipherdata.</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.derive_key</span><span class="w"> </span><span class="kn">import</span> <span class="n">MIN_ITERATIONS</span><span class="p">,</span> <span class="n">MAX_ITERATIONS</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.__version__</span><span class="w"> </span><span class="kn">import</span> <span class="n">__version__</span>
 
-<span class="sd">    .. seealso::</span>
+<span class="c1"># ---------------------------------------------------------------------------</span>
+<span class="c1"># Encrypted bundle format, version 2 (all integers are big-endian)</span>
+<span class="c1">#</span>
+<span class="c1">#   offset  size  field</span>
+<span class="c1">#   0       4     magic       b"PACB"</span>
+<span class="c1">#   4       1     version     int</span>
+<span class="c1">#   5       4     iterations  uint32</span>
+<span class="c1">#   9       32    salt</span>
+<span class="c1">#   41      16    iv</span>
+<span class="c1">#   ------------------------- header (57 bytes, authenticated by the HMAC)</span>
+<span class="c1">#   57      32    hmac</span>
+<span class="c1">#   89      16*n  cipherdata  (n &gt;= 1)</span>
+<span class="c1"># ---------------------------------------------------------------------------</span>
+<span class="n">MAGIC</span> <span class="o">=</span> <span class="sa">b</span><span class="s2">"PACB"</span>
+<span class="n">VERSION</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">__version__</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">SALT_SIZE</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="n">IV_SIZE</span> <span class="o">=</span> <span class="mi">16</span>
+<span class="n">HMAC_SIZE</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="n">BLOCK_SIZE</span> <span class="o">=</span> <span class="mi">16</span>
 
-<span class="sd">        - function :func:`pyaescbc.extract_cryptography_components` to extract the components from the encrypted bundle.</span>
+<span class="n">_PREFIX</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">Struct</span><span class="p">(</span><span class="s2">"&gt;4sBI"</span><span class="p">)</span>      
+<span class="n">HEADER_SIZE</span> <span class="o">=</span> <span class="n">_PREFIX</span><span class="o">.</span><span class="n">size</span> <span class="o">+</span> <span class="n">SALT_SIZE</span> <span class="o">+</span> <span class="n">IV_SIZE</span>     <span class="c1"># 57</span>
+<span class="n">MIN_BUNDLE_SIZE</span> <span class="o">=</span> <span class="n">HEADER_SIZE</span> <span class="o">+</span> <span class="n">HMAC_SIZE</span> <span class="o">+</span> <span class="n">BLOCK_SIZE</span>  <span class="c1"># 105</span>
+
+
+<div class="viewcode-block" id="create_bundle_header">
+<a class="viewcode-back" href="../../api.html#pyaescbc.create_bundle_header">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">create_bundle_header</span><span class="p">(</span><span class="n">iterations</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">salt</span><span class="p">:</span> <span class="nb">bytearray</span><span class="p">,</span> <span class="n">iv</span><span class="p">:</span> <span class="nb">bytearray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytearray</span><span class="p">:</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">"""</span>
+<span class="sd">    Creates the public header of an encrypted bundle (format version 2).</span>
+
+<span class="sd">    The header contains every public parameter needed to decrypt the data and must be</span>
+<span class="sd">    authenticated by the HMAC (see :func:`pyaescbc.create_hmac`).</span>
+
+<span class="sd">    .. code-block:: text</span>
+
+<span class="sd">        header = magic (4) | version (1) | iterations (4) | salt (32) | iv (16)</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
+<span class="sd">    iterations : int</span>
+<span class="sd">        The number of PBKDF2 iterations used to derive the key.</span>
+
+<span class="sd">    salt : bytearray</span>
+<span class="sd">        The 32-byte salt used to derive the key.</span>
+
 <span class="sd">    iv : bytearray</span>
 <span class="sd">        The 16-byte initialization vector used for encryption.</span>
 
-<span class="sd">    salt : bytearray</span>
-<span class="sd">        The 32-byte salt used to generate the derived key.</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    header : bytearray</span>
+<span class="sd">        The 57-byte header.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    TypeError</span>
+<span class="sd">        If an argument is not of the correct type.</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If ``iterations`` is out of range or ``salt`` / ``iv`` have the wrong length.</span>
+<span class="sd">    """</span>
+    <span class="c1"># Check the types of the parameters</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">iterations</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">iterations</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">'Parameter iterations is not int instance.'</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">salt</span><span class="p">,</span> <span class="nb">bytearray</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">'Parameter salt is not bytearray instance.'</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">iv</span><span class="p">,</span> <span class="nb">bytearray</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">'Parameter iv is not bytearray instance.'</span><span class="p">)</span>
+
+    <span class="c1"># Check the values of the parameters</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">MIN_ITERATIONS</span> <span class="o">&lt;=</span> <span class="n">iterations</span> <span class="o">&lt;=</span> <span class="n">MAX_ITERATIONS</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">'Parameter iterations must be between </span><span class="si">{</span><span class="n">MIN_ITERATIONS</span><span class="si">}</span><span class="s1"> and </span><span class="si">{</span><span class="n">MAX_ITERATIONS</span><span class="si">}</span><span class="s1">.'</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">salt</span><span class="p">)</span> <span class="o">!=</span> <span class="n">SALT_SIZE</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'Parameter salt must be 32 bytes long.'</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">iv</span><span class="p">)</span> <span class="o">!=</span> <span class="n">IV_SIZE</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'Parameter iv must be 16 bytes long.'</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="nb">bytearray</span><span class="p">()</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="n">_PREFIX</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">MAGIC</span><span class="p">,</span> <span class="n">VERSION</span><span class="p">,</span> <span class="n">iterations</span><span class="p">),</span> <span class="n">salt</span><span class="p">,</span> <span class="n">iv</span><span class="p">))</span></div>
+
+
+
+<div class="viewcode-block" id="create_encrypted_bundle">
+<a class="viewcode-back" href="../../api.html#pyaescbc.create_encrypted_bundle">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">create_encrypted_bundle</span><span class="p">(</span><span class="n">header</span><span class="p">:</span> <span class="nb">bytearray</span><span class="p">,</span> <span class="n">expected_hmac</span><span class="p">:</span> <span class="nb">bytearray</span><span class="p">,</span> <span class="n">cipherdata</span><span class="p">:</span> <span class="nb">bytearray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytearray</span><span class="p">:</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">"""</span>
+<span class="sd">    Creates the encrypted bundle containing all the information needed to decrypt the data.</span>
+
+<span class="sd">    .. code-block:: text</span>
+
+<span class="sd">        encrypted_bundle = header (57) | hmac (32) | cipherdata (16*n)</span>
+
+<span class="sd">    .. seealso::</span>
+
+<span class="sd">        - function :func:`pyaescbc.create_bundle_header` to create the header.</span>
+<span class="sd">        - function :func:`pyaescbc.extract_cryptography_components` to parse the bundle.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    header : bytearray</span>
+<span class="sd">        The 57-byte header created by :func:`pyaescbc.create_bundle_header`.</span>
 
 <span class="sd">    expected_hmac : bytearray</span>
-<span class="sd">        The 32-byte expected HMAC.</span>
+<span class="sd">        The 32-byte HMAC computed over the header, the cipherdata and the authdata.</span>
 
 <span class="sd">    cipherdata : bytearray</span>
-<span class="sd">        The encrypted message.</span>
+<span class="sd">        The encrypted message (length is a positive multiple of 16).</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    encrypted_bundle : bytearray</span>
-<span class="sd">        The concatenated bytearray containing ``iv + salt + expected_hmac + cipherdata``.</span>
+<span class="sd">        The encrypted bundle.</span>
 
 <span class="sd">    Raises</span>
 <span class="sd">    ------</span>
 <span class="sd">    TypeError</span>
 <span class="sd">        If any argument is not a ``bytearray`` instance.</span>
 <span class="sd">    ValueError</span>
-<span class="sd">        If any of the components (salt, iv, hmac) are not the correct length.</span>
+<span class="sd">        If any component has an invalid length or the header is not a version 2 header.</span>
 <span class="sd">    """</span>
     <span class="c1"># Check the types of the parameters</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">iv</span><span class="p">,</span> <span class="nb">bytearray</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">'Parameter iv is not bytearray instance.'</span><span class="p">)</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">salt</span><span class="p">,</span> <span class="nb">bytearray</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">'Parameter salt is not bytearray instance.'</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">header</span><span class="p">,</span> <span class="nb">bytearray</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">'Parameter header is not bytearray instance.'</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">expected_hmac</span><span class="p">,</span> <span class="nb">bytearray</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">'Parameter expected_hmac is not bytearray instance.'</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">cipherdata</span><span class="p">,</span> <span class="nb">bytearray</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">'Parameter cipherdata is not bytearray instance.'</span><span class="p">)</span>
-    
-    <span class="c1"># Check the values of the parameters</span>
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">iv</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">16</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">iv</span><span class="si">=}</span><span class="s1"> is not 16 bytes long.'</span><span class="p">)</span> 
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">salt</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">32</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">salt</span><span class="si">=}</span><span class="s1"> is not 32 bytes long.'</span><span class="p">)</span> 
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">expected_hmac</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">32</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">expected_hmac</span><span class="si">=}</span><span class="s1"> is not 32 bytes long.'</span><span class="p">)</span>
 
-    <span class="c1"># Create the encrypted bundle</span>
-    <span class="c1"># Use join to create only one memory allocation</span>
-    <span class="k">return</span> <span class="nb">bytearray</span><span class="p">()</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="n">iv</span><span class="p">,</span> <span class="n">salt</span><span class="p">,</span> <span class="n">expected_hmac</span><span class="p">,</span> <span class="n">cipherdata</span><span class="p">))</span></div>
+    <span class="c1"># Check the values of the parameters</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">header</span><span class="p">)</span> <span class="o">!=</span> <span class="n">HEADER_SIZE</span> <span class="ow">or</span> <span class="n">header</span><span class="p">[:</span><span class="mi">4</span><span class="p">]</span> <span class="o">!=</span> <span class="n">MAGIC</span> <span class="ow">or</span> <span class="n">header</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">!=</span> <span class="n">VERSION</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'Parameter header is not a valid version 2 header.'</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">expected_hmac</span><span class="p">)</span> <span class="o">!=</span> <span class="n">HMAC_SIZE</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'Parameter expected_hmac must be 32 bytes long.'</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">cipherdata</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">cipherdata</span><span class="p">)</span> <span class="o">%</span> <span class="n">BLOCK_SIZE</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'Parameter cipherdata length must be a positive multiple of 16.'</span><span class="p">)</span>
+
+    <span class="c1"># Single allocation for the whole bundle</span>
+    <span class="k">return</span> <span class="nb">bytearray</span><span class="p">()</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="n">header</span><span class="p">,</span> <span class="n">expected_hmac</span><span class="p">,</span> <span class="n">cipherdata</span><span class="p">))</span></div>
 
 </pre></div>
 

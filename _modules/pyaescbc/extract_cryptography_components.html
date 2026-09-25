@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>pyaescbc.extract_cryptography_components &#8212; pyaescbc 1.0.0 documentation</title>
+    <title>pyaescbc.extract_cryptography_components &#8212; pyaescbc 2.0.0 documentation</title>
   
   
   
@@ -37,7 +37,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=a95f357e85573c9b56d5" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=a95f357e85573c9b56d5" />
 
-    <script src="../../_static/documentation_options.js?v=8d563738"></script>
+    <script src="../../_static/documentation_options.js?v=51b770b3"></script>
     <script src="../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/pyaescbc/extract_cryptography_components';</script>
@@ -114,7 +114,7 @@
   
   
   
-    <p class="title logo__title">pyaescbc 1.0.0 documentation</p>
+    <p class="title logo__title">pyaescbc 2.0.0 documentation</p>
   
 </a></div>
     
@@ -345,13 +345,42 @@
 <span class="c1"># See the License for the specific language governing permissions and</span>
 <span class="c1"># limitations under the License.</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Tuple</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">NamedTuple</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.create_encrypted_bundle</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">_PREFIX</span><span class="p">,</span> <span class="n">MAGIC</span><span class="p">,</span> <span class="n">VERSION</span><span class="p">,</span> <span class="n">SALT_SIZE</span><span class="p">,</span> <span class="n">IV_SIZE</span><span class="p">,</span> <span class="n">HMAC_SIZE</span><span class="p">,</span> <span class="n">BLOCK_SIZE</span><span class="p">,</span>
+    <span class="n">HEADER_SIZE</span><span class="p">,</span> <span class="n">MIN_BUNDLE_SIZE</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.derive_key</span><span class="w"> </span><span class="kn">import</span> <span class="n">MIN_ITERATIONS</span><span class="p">,</span> <span class="n">MAX_ITERATIONS</span>
+
+
+<div class="viewcode-block" id="BundleComponents">
+<a class="viewcode-back" href="../../api.html#pyaescbc.BundleComponents">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">BundleComponents</span><span class="p">(</span><span class="n">NamedTuple</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Components of a version 2 encrypted bundle (all byte fields are copies)."""</span>
+    <span class="n">header</span><span class="p">:</span> <span class="nb">bytearray</span>         <span class="c1"># the exact header bytes, to be passed to create_hmac</span>
+    <span class="n">iterations</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">salt</span><span class="p">:</span> <span class="nb">bytearray</span>
+    <span class="n">iv</span><span class="p">:</span> <span class="nb">bytearray</span>
+    <span class="n">expected_hmac</span><span class="p">:</span> <span class="nb">bytearray</span>
+    <span class="n">cipherdata</span><span class="p">:</span> <span class="nb">bytearray</span></div>
+
+
 
 <div class="viewcode-block" id="extract_cryptography_components">
 <a class="viewcode-back" href="../../api.html#pyaescbc.extract_cryptography_components">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">extract_cryptography_components</span><span class="p">(</span><span class="n">encrypted_bundle</span><span class="p">:</span> <span class="nb">bytearray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">bytearray</span><span class="p">,</span> <span class="nb">bytearray</span><span class="p">,</span> <span class="nb">bytearray</span><span class="p">,</span> <span class="nb">bytearray</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">"""</span>
-<span class="sd">    Extracts the IV, salt, expected HMAC, and cipherdata from the encrypted bundle.</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">extract_cryptography_components</span><span class="p">(</span><span class="n">encrypted_bundle</span><span class="p">:</span> <span class="nb">bytearray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BundleComponents</span><span class="p">:</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">"""</span>
+<span class="sd">    Parses and validates a version 2 encrypted bundle.</span>
+
+<span class="sd">    The structure of the bundle is validated (magic, version, iteration bounds, lengths)</span>
+<span class="sd">    BEFORE any key derivation, so that a malformed or malicious bundle is rejected cheaply.</span>
+<span class="sd">    The data is NOT authenticated by this function: the HMAC must be checked afterwards.</span>
+
+<span class="sd">    .. code-block:: text</span>
+
+<span class="sd">        encrypted_bundle = magic (4) | version (1) | iterations (4) | salt (32) | iv (16)</span>
+<span class="sd">                         | hmac (32) | cipherdata (16*n)</span>
 
 <span class="sd">    .. seealso::</span>
 
@@ -360,34 +389,50 @@
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    encrypted_bundle : bytearray</span>
-<span class="sd">        The encrypted bundle. Must contain at least 80 bytes.</span>
+<span class="sd">        The encrypted bundle. It is not modified.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    tuple</span>
-<span class="sd">        A tuple containing the IV, salt, expected HMAC, and cipherdata.</span>
+<span class="sd">    BundleComponents</span>
+<span class="sd">        Named tuple ``(header, iterations, salt, iv, expected_hmac, cipherdata)``.</span>
+<span class="sd">        ``header`` is the exact byte sequence to authenticate with :func:`pyaescbc.create_hmac`.</span>
 
 <span class="sd">    Raises</span>
 <span class="sd">    ------</span>
 <span class="sd">    TypeError</span>
 <span class="sd">        If the argument is not a ``bytearray`` instance.</span>
 <span class="sd">    ValueError</span>
-<span class="sd">        If the bytearray does not contain at least 80 bytes.</span>
+<span class="sd">        If the bundle is malformed, has an unknown magic or version, or its iteration</span>
+<span class="sd">        count is out of the allowed range.</span>
 <span class="sd">    """</span>
     <span class="c1"># Check the types of the parameters</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">encrypted_bundle</span><span class="p">,</span> <span class="nb">bytearray</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">'Parameter encrypted_bundle is not bytearray instance.'</span><span class="p">)</span>
-    
-    <span class="c1"># Check the value of the parameters</span>
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">encrypted_bundle</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">80</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">'encrypted_bundle does not contain more than 80 bytes.'</span><span class="p">)</span> 
 
-    <span class="c1"># Extract the components</span>
-    <span class="n">iv</span> <span class="o">=</span> <span class="n">encrypted_bundle</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">16</span><span class="p">]</span>
-    <span class="n">salt</span> <span class="o">=</span> <span class="n">encrypted_bundle</span><span class="p">[</span><span class="mi">16</span><span class="p">:</span><span class="mi">48</span><span class="p">]</span>
-    <span class="n">expected_hmac</span> <span class="o">=</span> <span class="n">encrypted_bundle</span><span class="p">[</span><span class="mi">48</span><span class="p">:</span><span class="mi">80</span><span class="p">]</span>
-    <span class="n">cipherdata</span> <span class="o">=</span> <span class="n">encrypted_bundle</span><span class="p">[</span><span class="mi">80</span><span class="p">:]</span>
-    <span class="k">return</span> <span class="n">iv</span><span class="p">,</span> <span class="n">salt</span><span class="p">,</span> <span class="n">expected_hmac</span><span class="p">,</span> <span class="n">cipherdata</span></div>
+    <span class="c1"># Check the structure of the bundle</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">encrypted_bundle</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">MIN_BUNDLE_SIZE</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'Invalid encrypted bundle: too short.'</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">encrypted_bundle</span><span class="p">)</span> <span class="o">-</span> <span class="n">HEADER_SIZE</span> <span class="o">-</span> <span class="n">HMAC_SIZE</span><span class="p">)</span> <span class="o">%</span> <span class="n">BLOCK_SIZE</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'Invalid encrypted bundle: cipherdata length is not a multiple of 16.'</span><span class="p">)</span>
+
+    <span class="n">magic</span><span class="p">,</span> <span class="n">version</span><span class="p">,</span> <span class="n">iterations</span> <span class="o">=</span> <span class="n">_PREFIX</span><span class="o">.</span><span class="n">unpack_from</span><span class="p">(</span><span class="n">encrypted_bundle</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">magic</span> <span class="o">!=</span> <span class="n">MAGIC</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'Invalid encrypted bundle: unknown format (legacy v1 bundle?).'</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">version</span> <span class="o">!=</span> <span class="n">VERSION</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">'Invalid encrypted bundle: unsupported version </span><span class="si">{</span><span class="n">version</span><span class="si">}</span><span class="s1">.'</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">MIN_ITERATIONS</span> <span class="o">&lt;=</span> <span class="n">iterations</span> <span class="o">&lt;=</span> <span class="n">MAX_ITERATIONS</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'Invalid encrypted bundle: iterations out of the allowed range.'</span><span class="p">)</span>
+
+    <span class="c1"># Extract the components (slices of a bytearray are independent bytearray copies)</span>
+    <span class="n">offset</span> <span class="o">=</span> <span class="n">_PREFIX</span><span class="o">.</span><span class="n">size</span>
+    <span class="n">salt</span> <span class="o">=</span> <span class="n">encrypted_bundle</span><span class="p">[</span><span class="n">offset</span><span class="p">:</span><span class="n">offset</span> <span class="o">+</span> <span class="n">SALT_SIZE</span><span class="p">]</span>
+    <span class="n">offset</span> <span class="o">+=</span> <span class="n">SALT_SIZE</span>
+    <span class="n">iv</span> <span class="o">=</span> <span class="n">encrypted_bundle</span><span class="p">[</span><span class="n">offset</span><span class="p">:</span><span class="n">offset</span> <span class="o">+</span> <span class="n">IV_SIZE</span><span class="p">]</span>
+    <span class="n">header</span> <span class="o">=</span> <span class="n">encrypted_bundle</span><span class="p">[:</span><span class="n">HEADER_SIZE</span><span class="p">]</span>
+    <span class="n">expected_hmac</span> <span class="o">=</span> <span class="n">encrypted_bundle</span><span class="p">[</span><span class="n">HEADER_SIZE</span><span class="p">:</span><span class="n">HEADER_SIZE</span> <span class="o">+</span> <span class="n">HMAC_SIZE</span><span class="p">]</span>
+    <span class="n">cipherdata</span> <span class="o">=</span> <span class="n">encrypted_bundle</span><span class="p">[</span><span class="n">HEADER_SIZE</span> <span class="o">+</span> <span class="n">HMAC_SIZE</span><span class="p">:]</span>
+
+    <span class="k">return</span> <span class="n">BundleComponents</span><span class="p">(</span><span class="n">header</span><span class="p">,</span> <span class="n">iterations</span><span class="p">,</span> <span class="n">salt</span><span class="p">,</span> <span class="n">iv</span><span class="p">,</span> <span class="n">expected_hmac</span><span class="p">,</span> <span class="n">cipherdata</span><span class="p">)</span></div>
 
 </pre></div>
 

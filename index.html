@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Welcome to pyaescbc’s documentation! &#8212; pyaescbc 1.0.0 documentation</title>
+    <title>Welcome to pyaescbc’s documentation! &#8212; pyaescbc 2.0.0 documentation</title>
   
   
   
@@ -38,7 +38,7 @@
   <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=a95f357e85573c9b56d5" />
 <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=a95f357e85573c9b56d5" />
 
-    <script src="_static/documentation_options.js?v=8d563738"></script>
+    <script src="_static/documentation_options.js?v=51b770b3"></script>
     <script src="_static/doctools.js?v=9bcbadda"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'index';</script>
@@ -116,7 +116,7 @@
   
   
   
-    <p class="title logo__title">pyaescbc 1.0.0 documentation</p>
+    <p class="title logo__title">pyaescbc 2.0.0 documentation</p>
   
 </a></div>
     
@@ -314,14 +314,33 @@
 <section id="description-of-the-package">
 <h2>Description of the package<a class="headerlink" href="#description-of-the-package" title="Link to this heading">#</a></h2>
 <p>AES-CBC encryption tools based on crytography package !</p>
-<p>The package <cite>pyaescbc</cite> provides functions to encrypt and decrypt data using the AES-CBC encryption mode.
-The package is written in Python and uses the <cite>cryptography</cite> library for the AES encryption and decryption.
-The package also provides functions to generate a derived key from a password and a pin, and to create an HMAC value from the derived key, IV, and ciphertext.
-The package is designed to be easy to use and secure, and it is suitable for encrypting sensitive data.</p>
+<p>The package <code class="docutils literal notranslate"><span class="pre">pyaescbc</span></code> provides functions to encrypt and decrypt data using the AES-CBC encryption mode.
+The package is written in Python and uses the <code class="docutils literal notranslate"><span class="pre">cryptography</span></code> library for the AES encryption and decryption.
+The package also provides functions to generate to create an HMAC value from the derived key, IV, and ciphertext.
+The package is designed to be easy to use.</p>
 <p>The encryption process is designed as follow :</p>
 <img alt="_images/encrypt.png" class="align-center" src="_images/encrypt.png" />
 <p>The decryption process is designed as follow :</p>
 <img alt="_images/decrypt.png" class="align-center" src="_images/decrypt.png" />
+</section>
+<section id="security-considerations">
+<h2>Security considerations<a class="headerlink" href="#security-considerations" title="Link to this heading">#</a></h2>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p><strong>Consider AES-GCM for new projects.</strong></p>
+<p><code class="docutils literal notranslate"><span class="pre">pyaescbc</span></code> implements AES-256-CBC with HMAC-SHA256 (Encrypt-then-MAC). This construction
+is secure when assembled correctly, but it requires several hand-assembled parts
+(padding, HMAC, key separation, constant-time comparison).
+For new projects, prefer an authenticated encryption mode (AEAD) such as
+<a class="reference external" href="https://cryptography.io/en/latest/hazmat/primitives/aead/#cryptography.hazmat.primitives.ciphers.aead.AESGCM">AESGCM</a>
+or <a class="reference external" href="https://cryptography.io/en/latest/hazmat/primitives/aead/#cryptography.hazmat.primitives.ciphers.aead.ChaCha20Poly1305">ChaCha20Poly1305</a>
+from the <code class="docutils literal notranslate"><span class="pre">cryptography</span></code> library, which provide confidentiality and integrity in a single primitive.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>Memory wiping is best-effort.</strong> Python cannot guarantee that secrets are erased from memory
+(immutable copies may be created by the interpreter or by the underlying libraries).</p>
+</div>
 </section>
 <section id="contents">
 <h2>Contents<a class="headerlink" href="#contents" title="Link to this heading">#</a></h2>
@@ -397,6 +416,7 @@ The package is designed to be easy to use and secure, and it is suitable for enc
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="pst-show_toc_level nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#description-of-the-package">Description of the package</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#security-considerations">Security considerations</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#contents">Contents</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#author">Author</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#license">License</a></li>

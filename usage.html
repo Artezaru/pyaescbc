@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Usage &#8212; pyaescbc 1.0.0 documentation</title>
+    <title>Usage &#8212; pyaescbc 2.0.0 documentation</title>
   
   
   
@@ -38,7 +38,7 @@
   <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=a95f357e85573c9b56d5" />
 <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=a95f357e85573c9b56d5" />
 
-    <script src="_static/documentation_options.js?v=8d563738"></script>
+    <script src="_static/documentation_options.js?v=51b770b3"></script>
     <script src="_static/doctools.js?v=9bcbadda"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'usage';</script>
@@ -116,7 +116,7 @@
   
   
   
-    <p class="title logo__title">pyaescbc 1.0.0 documentation</p>
+    <p class="title logo__title">pyaescbc 2.0.0 documentation</p>
   
 </a></div>
     
@@ -352,36 +352,31 @@
 <section id="package-usage">
 <h2>Package usage<a class="headerlink" href="#package-usage" title="Link to this heading">#</a></h2>
 <p>To encrypt a message, use the following code, available in the <cite>examples</cite> directory of the package:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pyaescbc</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)))</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">pyaescbc</span>
 
 <span class="c1"># Encryption</span>
-<span class="n">cleardata</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">(</span><span class="s2">"Hello, World!"</span><span class="p">,</span> <span class="s2">"utf-8"</span><span class="p">)</span>
-<span class="n">pin</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">(</span><span class="s2">"1234"</span><span class="p">,</span> <span class="s2">"utf-8"</span><span class="p">)</span>
-<span class="n">password</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">(</span><span class="s2">"password"</span><span class="p">,</span> <span class="s2">"utf-8"</span><span class="p">)</span>
-<span class="n">iterations</span> <span class="o">=</span> <span class="n">pyaescbc</span><span class="o">.</span><span class="n">generate_pin_iterations</span><span class="p">(</span><span class="n">pin</span><span class="p">,</span> <span class="n">delete_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">authdata</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">(</span><span class="s2">"user=toto"</span><span class="p">,</span> <span class="s2">"utf-8"</span><span class="p">)</span>  <span class="c1"># Optional authentication data (can be None)</span>
-<span class="n">encrypted_bundle</span> <span class="o">=</span> <span class="n">pyaescbc</span><span class="o">.</span><span class="n">encrypt</span><span class="p">(</span>
-    <span class="n">cleardata</span><span class="p">,</span>
-    <span class="n">password</span><span class="p">,</span>
-    <span class="n">iterations</span><span class="p">,</span>
-    <span class="n">authdata</span><span class="o">=</span><span class="n">authdata</span><span class="p">,</span>
-    <span class="n">delete_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-    <span class="n">delete_data</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-<span class="p">)</span>
+<span class="n">cleardata</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">(</span><span class="s2">"Hello, World!"</span><span class="p">,</span> <span class="s1">'utf-8'</span><span class="p">)</span>
+<span class="n">password</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">(</span><span class="s2">"password"</span><span class="p">,</span> <span class="s1">'utf-8'</span><span class="p">)</span>
+<span class="n">iterations</span> <span class="o">=</span> <span class="mi">2_000_000</span>
+<span class="n">authdata</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">(</span><span class="s2">"user=toto"</span><span class="p">,</span> <span class="s1">'utf-8'</span><span class="p">)</span> <span class="c1"># Optional authentication data (can be None)</span>
+<span class="n">encrypted_bundle</span> <span class="o">=</span> <span class="n">pyaescbc</span><span class="o">.</span><span class="n">encrypt</span><span class="p">(</span><span class="n">cleardata</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="n">iterations</span><span class="o">=</span><span class="n">iterations</span><span class="p">,</span> <span class="n">authdata</span><span class="o">=</span><span class="n">authdata</span><span class="p">,</span> <span class="n">delete_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">delete_data</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
 <span class="c1"># Decryption</span>
-<span class="n">pin</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">(</span><span class="s2">"1234"</span><span class="p">,</span> <span class="s2">"utf-8"</span><span class="p">)</span>
-<span class="n">password</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">(</span><span class="s2">"password"</span><span class="p">,</span> <span class="s2">"utf-8"</span><span class="p">)</span>
-<span class="n">iterations</span> <span class="o">=</span> <span class="n">pyaescbc</span><span class="o">.</span><span class="n">generate_pin_iterations</span><span class="p">(</span><span class="n">pin</span><span class="p">,</span> <span class="n">delete_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">authdata</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">(</span><span class="s2">"user=toto"</span><span class="p">,</span> <span class="s2">"utf-8"</span><span class="p">)</span>  <span class="c1"># Optional authentication data (can be None)</span>
-<span class="n">decrypted_data</span> <span class="o">=</span> <span class="n">pyaescbc</span><span class="o">.</span><span class="n">decrypt</span><span class="p">(</span>
-    <span class="n">encrypted_bundle</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="n">iterations</span><span class="p">,</span> <span class="n">authdata</span><span class="o">=</span><span class="n">authdata</span><span class="p">,</span> <span class="n">delete_keys</span><span class="o">=</span><span class="kc">True</span>
-<span class="p">)</span>
+<span class="n">password</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">(</span><span class="s2">"password"</span><span class="p">,</span> <span class="s1">'utf-8'</span><span class="p">)</span>
+<span class="n">iterations</span> <span class="o">=</span> <span class="mi">2_000_000</span>
+<span class="n">authdata</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">(</span><span class="s2">"user=toto"</span><span class="p">,</span> <span class="s1">'utf-8'</span><span class="p">)</span> <span class="c1"># Optional authentication data (can be None)</span>
+<span class="n">decrypted_data</span> <span class="o">=</span> <span class="n">pyaescbc</span><span class="o">.</span><span class="n">decrypt</span><span class="p">(</span><span class="n">encrypted_bundle</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="n">authdata</span><span class="o">=</span><span class="n">authdata</span><span class="p">,</span> <span class="n">delete_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="n">decrypted_data</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>The iteration can also be generated randomly, using <a class="reference internal" href="api.html#pyaescbc.generate_random_iterations" title="pyaescbc.generate_random_iterations"><code class="xref py py-func docutils literal notranslate"><span class="pre">pyaescbc.generate_random_iterations()</span></code></a>.</p>
+<p>The iteration can also be generated randomly, using <code class="xref py py-func docutils literal notranslate"><span class="pre">pyaescbc.generate_random_iterations()</span></code>.</p>
 </section>
 <section id="type-convertion">
 <h2>Type convertion<a class="headerlink" href="#type-convertion" title="Link to this heading">#</a></h2>
