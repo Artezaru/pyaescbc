@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 
 
@@ -8,7 +7,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>API Reference &#8212; pyaescbc 2.1.0 documentation</title>
+    <title>API Reference &#8212; pyaescbc 3.0.0 documentation</title>
   
   
   
@@ -27,20 +26,20 @@
   </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="_static/styles/theme.css?digest=a95f357e85573c9b56d5" rel="stylesheet" />
-<link href="_static/styles/pydata-sphinx-theme.css?digest=a95f357e85573c9b56d5" rel="stylesheet" />
+  <link href="_static/styles/theme.css?digest=75c7c72ae941e8b558d8" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=75c7c72ae941e8b558d8" rel="stylesheet" />
 
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=8f2a1f02" />
   
   <!-- So that users can add custom icons -->
-  <script defer src="_static/scripts/fontawesome.js?digest=a95f357e85573c9b56d5"></script>
+  <script defer src="_static/scripts/fontawesome.js?digest=75c7c72ae941e8b558d8"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=a95f357e85573c9b56d5" />
-<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=a95f357e85573c9b56d5" />
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8" />
 
-    <script src="_static/documentation_options.js?v=20623aea"></script>
-    <script src="_static/doctools.js?v=9bcbadda"></script>
-    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/documentation_options.js?v=acc74ff5"></script>
+    <script src="_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'api';</script>
     <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
     <link rel="index" title="Index" href="genindex.html" />
@@ -48,6 +47,7 @@
     <link rel="next" title="Usage" href="usage.html" />
     <link rel="prev" title="Installation" href="installation.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="color-scheme" content="light dark"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="" />
   
@@ -97,7 +97,7 @@
   
     <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
 <div class="bd-header__inner bd-page-width">
-  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+  <button type="button" class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation" aria-expanded="false" aria-controls="pst-primary-sidebar-modal">
     <span class="fa-solid fa-bars"></span>
   </button>
   
@@ -117,7 +117,7 @@
   
   
   
-    <p class="title logo__title">pyaescbc 2.1.0 documentation</p>
+    <p class="title logo__title">pyaescbc 3.0.0 documentation</p>
   
 </a></div>
     
@@ -139,7 +139,7 @@
 
 
 <li class="nav-item current active">
-  <a class="nav-link nav-internal" href="#">
+  <a class="nav-link nav-internal" href="#" aria-current="page">
     API Reference
   </a>
 </li>
@@ -162,7 +162,7 @@
         <div class="navbar-item navbar-persistent--container">
           
 
-<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+<button type="button" class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
  <i class="fa-solid fa-magnifying-glass"></i>
  <span class="search-button__default-text">Search</span>
  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
@@ -173,15 +173,15 @@
         <div class="navbar-item">
 
 <div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
-  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
-    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
-    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
-    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto" title="System Settings"></i>
   </button>
   <ul class="dropdown-menu dropdown-menu-end">
-    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
-    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
-    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg me-1"></i>Dark</button></li>
   </ul>
 </div></div>
       
@@ -192,7 +192,7 @@
   
     <div class="navbar-persistent--mobile">
 
-<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+<button type="button" class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
  <i class="fa-solid fa-magnifying-glass"></i>
  <span class="search-button__default-text">Search</span>
  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
@@ -201,7 +201,7 @@
   
 
   
-    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+    <button type="button" class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page" aria-expanded="false" aria-controls="pst-secondary-sidebar-modal">
       <span class="fa-solid fa-outdent"></span>
     </button>
   
@@ -215,7 +215,7 @@
       
       
       
-      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <dialog id="pst-primary-sidebar-modal" tabindex="-1"></dialog>
       <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
         
 
@@ -239,7 +239,7 @@
 
 
 <li class="nav-item current active">
-  <a class="nav-link nav-internal" href="#">
+  <a class="nav-link nav-internal" href="#" aria-current="page">
     API Reference
   </a>
 </li>
@@ -264,15 +264,15 @@
           <div class="navbar-item">
 
 <div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
-  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
-    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
-    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
-    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto" title="System Settings"></i>
   </button>
   <ul class="dropdown-menu dropdown-menu-end">
-    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
-    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
-    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg me-1"></i>Dark</button></li>
   </ul>
 </div></div>
         
@@ -281,7 +281,8 @@
   </div>
   
     <div class="sidebar-primary-items__start sidebar-primary__section">
-        <div class="sidebar-primary-item pst-sidebar-collapse"><button id="pst-collapse-sidebar-button" aria-expanded="true" aria-controls="pst-primary-sidebar"><svg class="pst-icon svg-inline--fa" role="img" aria-hidden="true" focusable="false" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+        <div class="sidebar-primary-item pst-sidebar-collapse"><button type="button" id="pst-collapse-sidebar-button" aria-expanded="true" aria-controls="pst-primary-sidebar">
+  <svg class="pst-icon" role="img" aria-hidden="true" focusable="false" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
     <path fill="currentColor" d="M3 15.5C2.36232 15.5 1.74874 15.2564 1.28478 14.8189C0.820828 14.3815 0.541576 13.7832 0.504167 13.1467L0.5 13L0.5 3C0.499965 2.36232 0.743605 1.74874 1.18107 1.28478C1.61854 0.820828 2.21676 0.541576 2.85333 0.504167L3 0.5L13 0.5C13.6377 0.499965 14.2513 0.743605 14.7152 1.18107C15.1792 1.61854 15.4584 2.21676 15.4958 2.85333L15.5 3L15.5 13C15.5 13.6377 15.2564 14.2513 14.8189 14.7152C14.3815 15.1792 13.7832 15.4584 13.1467 15.4958L13 15.5L3 15.5ZM3 13.8333L10.5 13.8333L10.5 2.16667L3 2.16667C2.79589 2.16669 2.59889 2.24163 2.44636 2.37726C2.29383 2.5129 2.19638 2.69979 2.1725 2.9025L2.16667 3L2.16667 13C2.16669 13.2041 2.24163 13.4011 2.37726 13.5536C2.5129 13.7062 2.69979 13.8036 2.9025 13.8275L3 13.8333ZM6.65583 10.325L6.5775 10.2558L4.91083 8.58917C4.76735 8.44567 4.68116 8.25476 4.66843 8.05223C4.65569 7.84971 4.71729 7.6495 4.84167 7.48917L4.91083 7.41083L6.5775 5.74417C6.72747 5.59471 6.9287 5.50794 7.14032 5.50148C7.35194 5.49502 7.55809 5.56935 7.7169 5.70937C7.8757 5.8494 7.97525 6.04463 7.99533 6.25539C8.01541 6.46616 7.95451 6.67667 7.825 6.84417L7.75583 6.9225L6.67917 8L7.75583 9.0775C7.89931 9.22099 7.98551 9.41191 7.99824 9.61443C8.01097 9.81695 7.94938 10.0172 7.825 10.1775L7.75583 10.2558C7.61234 10.3993 7.42142 10.4855 7.2189 10.4982C7.01638 10.511 6.81617 10.4494 6.65583 10.325Z"/>
   </svg>
   <span class="pst-collapse-sidebar-label">Collapse Sidebar</span>
@@ -328,7 +329,7 @@
     
     <li class="breadcrumb-item breadcrumb-home">
       <a href="index.html" class="nav-link" aria-label="Home">
-        <i class="fa-solid fa-home"></i>
+        <i class="fa-solid fa-house"></i>
       </a>
     </li>
     <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">API Reference</span></li>
@@ -350,16 +351,18 @@
                   
   <section id="api-reference">
 <h1>API Reference<a class="headerlink" href="#api-reference" title="Link to this heading">#</a></h1>
-<p>The package <code class="docutils literal notranslate"><span class="pre">pyaescbc</span></code> is composed of the following functions, classes, and constants.</p>
-<p>To learn how to use the package effectively, refer to the documentation <a class="reference internal" href="usage.html"><span class="doc">Usage</span></a>.</p>
-<section id="encryption-decryption">
-<h2>Encryption / Decryption<a class="headerlink" href="#encryption-decryption" title="Link to this heading">#</a></h2>
-<p>The high-level functions to encrypt and decrypt data, the exception raised when
-authentication fails, and the function to erase sensitive data from memory.</p>
+<p>The public API of <code class="docutils literal notranslate"><span class="pre">pyaescbc</span></code> consists of the functions, classes and constants listed on this
+page (they are the names exported in <code class="docutils literal notranslate"><span class="pre">pyaescbc.__all__</span></code>). Everything else is internal and may
+change in any release.</p>
+<p>To learn how to use the package, refer to <a class="reference internal" href="usage.html"><span class="doc">Usage</span></a>.</p>
+<section id="password-mode">
+<h2>Password mode<a class="headerlink" href="#password-mode" title="Link to this heading">#</a></h2>
+<p>Encryption with a password. The key is derived with PBKDF2-HMAC-SHA256 on every call: slow on
+purpose, to resist brute-force attacks. Produces <code class="docutils literal notranslate"><span class="pre">PACB</span></code> bundles.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="pyaescbc.encrypt">
-<span class="sig-prename descclassname"><span class="pre">pyaescbc.</span></span><span class="sig-name descname"><span class="pre">encrypt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cleardata</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytearray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">password</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytearray</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">authdata</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytearray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iterations</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">600000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delete_keys</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delete_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bytearray</span></span></span><a class="headerlink" href="#pyaescbc.encrypt" title="Link to this definition">#</a></dt>
-<dd><p>Encrypts the clear data into an encrypted bundle (format version 2).</p>
+<span class="sig-prename descclassname"><span class="pre">pyaescbc.</span></span><span class="sig-name descname"><span class="pre">encrypt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cleardata</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytearray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">password</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytearray</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">authdata</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytearray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iterations</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">600000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delete_keys</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delete_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bytearray</span></span></span><a class="headerlink" href="#pyaescbc.encrypt" title="Link to this definition">#</a></dt>
+<dd><p>Encrypts the clear data with a password into a password-mode bundle (format version 2).</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>salt, iv          = random
 aes_key, hmac_key = derive_key(password, salt, iterations)
 cipherdata        = AES-256-CBC(aes_key, iv, cleardata)
@@ -377,7 +380,7 @@ encrypted_bundle  = header | hmac | cipherdata
 <span class="n">cleardata</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">(</span><span class="s2">"Hello, World!"</span><span class="p">,</span> <span class="s1">'utf-8'</span><span class="p">)</span>
 <span class="n">password</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">(</span><span class="s2">"password"</span><span class="p">,</span> <span class="s1">'utf-8'</span><span class="p">)</span>
 <span class="n">authdata</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">(</span><span class="s2">"user=toto"</span><span class="p">,</span> <span class="s1">'utf-8'</span><span class="p">)</span>  <span class="c1"># optional</span>
-<span class="n">encrypted_bundle</span> <span class="o">=</span> <span class="n">pyaescbc</span><span class="o">.</span><span class="n">encrypt</span><span class="p">(</span><span class="n">cleardata</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="n">authdata</span><span class="p">)</span>
+<span class="n">encrypted_bundle</span> <span class="o">=</span> <span class="n">pyaescbc</span><span class="o">.</span><span class="n">encrypt</span><span class="p">(</span><span class="n">cleardata</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="n">authdata</span><span class="o">=</span><span class="n">authdata</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -389,13 +392,13 @@ immutable copies of sensitive data.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>cleardata</strong> (<em>bytearray</em>) – The clear message to encrypt.</p></li>
+<li><p><strong>cleardata</strong> (<em>bytearray</em>) – The clear message to encrypt. It may be empty.</p></li>
 <li><p><strong>password</strong> (<em>bytearray</em>) – The user password. It must not be empty.</p></li>
-<li><p><strong>authdata</strong> (<em>Optional</em><em>[</em><em>bytearray</em><em>]</em>) – Optional additional authenticated data. It is authenticated by the HMAC but neither
+<li><p><strong>authdata</strong> (<em>Optional</em><em>[</em><em>bytearray</em><em>]</em>) – Optional additional authenticated data (keyword-only). It is authenticated by the HMAC but neither
 encrypted nor stored in the bundle: the same value must be given for decryption.
 It is never modified by this function.</p></li>
 <li><p><strong>iterations</strong> (<em>int</em>) – The number of PBKDF2 iterations (keyword-only). Default is 600 000.
-Must be between 100 000 and 10 000 000.</p></li>
+Must be between 100 000 and 100 000 000.</p></li>
 <li><p><strong>delete_keys</strong> (<em>bool</em>) – Wipe the <code class="docutils literal notranslate"><span class="pre">password</span></code> at the end of the function, even if an error occurs.
 Default is True.</p></li>
 <li><p><strong>delete_data</strong> (<em>bool</em>) – Wipe the <code class="docutils literal notranslate"><span class="pre">cleardata</span></code> at the end of the function, only if the encryption succeeded
@@ -420,8 +423,8 @@ Default is True.</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pyaescbc.decrypt">
-<span class="sig-prename descclassname"><span class="pre">pyaescbc.</span></span><span class="sig-name descname"><span class="pre">decrypt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">encrypted_bundle</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytearray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">password</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytearray</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">authdata</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytearray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delete_keys</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delete_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bytearray</span></span></span><a class="headerlink" href="#pyaescbc.decrypt" title="Link to this definition">#</a></dt>
-<dd><p>Decrypts an encrypted bundle (format version 2) and returns the clear data.</p>
+<span class="sig-prename descclassname"><span class="pre">pyaescbc.</span></span><span class="sig-name descname"><span class="pre">decrypt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">encrypted_bundle</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytearray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">password</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytearray</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">authdata</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytearray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delete_keys</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delete_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bytearray</span></span></span><a class="headerlink" href="#pyaescbc.decrypt" title="Link to this definition">#</a></dt>
+<dd><p>Decrypts a password-mode bundle (format version 2) and returns the clear data.</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>header | hmac | cipherdata = encrypted_bundle     (structure checked first)
 aes_key, hmac_key          = derive_key(password, salt, iterations)
 check  HMAC-SHA256(hmac_key, header, cipherdata, authdata) == hmac   (constant time)
@@ -437,7 +440,7 @@ after the HMAC has been verified.</p>
 
 <span class="n">password</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">(</span><span class="s2">"password"</span><span class="p">,</span> <span class="s1">'utf-8'</span><span class="p">)</span>
 <span class="n">authdata</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">(</span><span class="s2">"user=toto"</span><span class="p">,</span> <span class="s1">'utf-8'</span><span class="p">)</span>  <span class="c1"># same value as for encryption</span>
-<span class="n">cleardata</span> <span class="o">=</span> <span class="n">pyaescbc</span><span class="o">.</span><span class="n">decrypt</span><span class="p">(</span><span class="n">encrypted_bundle</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="n">authdata</span><span class="p">)</span>
+<span class="n">cleardata</span> <span class="o">=</span> <span class="n">pyaescbc</span><span class="o">.</span><span class="n">decrypt</span><span class="p">(</span><span class="n">encrypted_bundle</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="n">authdata</span><span class="o">=</span><span class="n">authdata</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -449,9 +452,9 @@ immutable copies of sensitive data.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>encrypted_bundle</strong> (<em>bytearray</em>) – The encrypted bundle created by <a class="reference internal" href="#pyaescbc.encrypt" title="pyaescbc.encrypt"><code class="xref py py-func docutils literal notranslate"><span class="pre">pyaescbc.encrypt()</span></code></a>.</p></li>
+<li><p><strong>encrypted_bundle</strong> (<em>bytearray</em>) – The password-mode bundle created by <code class="docutils literal notranslate"><span class="pre">pyaescbc.encrypt</span></code>.</p></li>
 <li><p><strong>password</strong> (<em>bytearray</em>) – The user password. It must not be empty.</p></li>
-<li><p><strong>authdata</strong> (<em>Optional</em><em>[</em><em>bytearray</em><em>]</em>) – The additional authenticated data given at encryption (<code class="docutils literal notranslate"><span class="pre">None</span></code> if none was given).
+<li><p><strong>authdata</strong> (<em>Optional</em><em>[</em><em>bytearray</em><em>]</em>) – The additional authenticated data given at encryption, keyword-only (<code class="docutils literal notranslate"><span class="pre">None</span></code> if none was given).
 It is never modified by this function.</p></li>
 <li><p><strong>delete_keys</strong> (<em>bool</em>) – Wipe the <code class="docutils literal notranslate"><span class="pre">password</span></code> at the end of the function, even if an error occurs.
 Default is True.</p></li>
@@ -477,56 +480,9 @@ password). Default is False: the bundle is not secret.</p></li>
 </dl>
 </dd></dl>
 
-<dl class="py class">
-<dt class="sig sig-object py" id="pyaescbc.AuthError">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyaescbc.</span></span><span class="sig-name descname"><span class="pre">AuthError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">code</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyaescbc/auth_error.html#AuthError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyaescbc.AuthError" title="Link to this definition">#</a></dt>
-<dd><p>Exception raised for errors related to the decryption key in <code class="docutils literal notranslate"><span class="pre">pyaescbc</span></code>.</p>
-<p>This exception is typically raised when the provided password or key
-is incorrect.</p>
-<p>The display message will be shown in the following format if a code is provided:</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">AuthError: [&lt;code&gt;] &lt;message&gt;</span>
-</pre></div>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>message</strong> (<em>str</em><em>, </em><em>optional</em>) – The error message to be displayed. Default is “”</p></li>
-<li><p><strong>code</strong> (<em>Optional</em><em>[</em><em>int</em><em>]</em><em>, </em><em>optional</em>) – An optional error code associated with the exception. Default is None.</p></li>
-</ul>
-</dd>
-</dl>
-<p class="rubric">Notes</p>
-<p>You can raise this exception when the HMAC verification fails
-during decryption, which usually means the wrong key was used (if the data were not</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="pyaescbc.delete_bytearray">
-<span class="sig-prename descclassname"><span class="pre">pyaescbc.</span></span><span class="sig-name descname"><span class="pre">delete_bytearray</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">barray</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytearray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/pyaescbc/delete_bytearray.html#delete_bytearray"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyaescbc.delete_bytearray" title="Link to this definition">#</a></dt>
-<dd><p>Securely overwrites the contents of a bytearray and deletes the object from memory.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pyaescbc</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">aes</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
-
-<span class="c1"># Create a bytearray</span>
-<span class="n">barray</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">urandom</span><span class="p">(</span><span class="mi">32</span><span class="p">))</span>  <span class="c1"># Example: 32 random bytes</span>
-
-<span class="c1"># Securely delete the bytearray</span>
-<span class="n">aes</span><span class="o">.</span><span class="n">delete_bytearray</span><span class="p">(</span><span class="n">barray</span><span class="p">)</span>
-</pre></div>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>barray</strong> (<em>bytearray</em>) – The bytearray to securely delete from memory.</p>
-</dd>
-<dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>TypeError</strong> – If the given argument is not a <code class="docutils literal notranslate"><span class="pre">bytearray</span></code> instance.</p>
-</dd>
-</dl>
-</dd></dl>
-
 <dl class="py data">
 <dt class="sig sig-object py" id="pyaescbc.DEFAULT_ITERATIONS">
-<span class="sig-prename descclassname"><span class="pre">pyaescbc.</span></span><span class="sig-name descname"><span class="pre">DEFAULT_ITERATIONS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">600000</span></em><a class="headerlink" href="#pyaescbc.DEFAULT_ITERATIONS" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pyaescbc.</span></span><span class="sig-name descname"><span class="pre">DEFAULT_ITERATIONS</span></span><span class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">600000</span></span><a class="headerlink" href="#pyaescbc.DEFAULT_ITERATIONS" title="Link to this definition">#</a></dt>
 <dd><p>int([x]) -&gt; integer
 int(x, base=10) -&gt; integer</p>
 <p>Convert a number or string to an integer, or return 0 if no arguments
@@ -539,52 +495,314 @@ by whitespace.  The base defaults to 10.  Valid bases are 0 and 2-36.
 Base 0 means to interpret the base from the string as an integer literal.
 &gt;&gt;&gt; int(‘0b100’, base=0)
 4</p>
+<p>Default number of PBKDF2 iterations (OWASP recommendation for PBKDF2-HMAC-SHA256).</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="pyaescbc.MIN_ITERATIONS">
+<span class="sig-prename descclassname"><span class="pre">pyaescbc.</span></span><span class="sig-name descname"><span class="pre">MIN_ITERATIONS</span></span><span class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">100000</span></span><a class="headerlink" href="#pyaescbc.MIN_ITERATIONS" title="Link to this definition">#</a></dt>
+<dd><p>int([x]) -&gt; integer
+int(x, base=10) -&gt; integer</p>
+<p>Convert a number or string to an integer, or return 0 if no arguments
+are given.  If x is a number, return x.__int__().  For floating point
+numbers, this truncates towards zero.</p>
+<p>If x is not a number or if base is given, then x must be a string,
+bytes, or bytearray instance representing an integer literal in the
+given base.  The literal can be preceded by ‘+’ or ‘-’ and be surrounded
+by whitespace.  The base defaults to 10.  Valid bases are 0 and 2-36.
+Base 0 means to interpret the base from the string as an integer literal.
+&gt;&gt;&gt; int(‘0b100’, base=0)
+4</p>
+<p>Minimum number of PBKDF2 iterations accepted (prevents weak settings).</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="pyaescbc.MAX_ITERATIONS">
+<span class="sig-prename descclassname"><span class="pre">pyaescbc.</span></span><span class="sig-name descname"><span class="pre">MAX_ITERATIONS</span></span><span class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">100000000</span></span><a class="headerlink" href="#pyaescbc.MAX_ITERATIONS" title="Link to this definition">#</a></dt>
+<dd><p>int([x]) -&gt; integer
+int(x, base=10) -&gt; integer</p>
+<p>Convert a number or string to an integer, or return 0 if no arguments
+are given.  If x is a number, return x.__int__().  For floating point
+numbers, this truncates towards zero.</p>
+<p>If x is not a number or if base is given, then x must be a string,
+bytes, or bytearray instance representing an integer literal in the
+given base.  The literal can be preceded by ‘+’ or ‘-’ and be surrounded
+by whitespace.  The base defaults to 10.  Valid bases are 0 and 2-36.
+Base 0 means to interpret the base from the string as an integer literal.
+&gt;&gt;&gt; int(‘0b100’, base=0)
+4</p>
+<p>Maximum number of PBKDF2 iterations accepted (prevents denial of service when the
+iteration count is read from an untrusted bundle).</p>
 </dd></dl>
 
 </section>
-<section id="encrypted-bundle-format">
-<h2>Encrypted Bundle Format<a class="headerlink" href="#encrypted-bundle-format" title="Link to this heading">#</a></h2>
-<p>An encrypted bundle (format version 2) has the following structure
-(all integers are big-endian):</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>offset  size   field
-0       4      magic       b"PACB"
-4       1      version     2
-5       4      iterations  uint32
-9       32     salt
-41      16     iv
---------------------------- header (57 bytes, authenticated by the HMAC)
-57      32     hmac        HMAC-SHA256
-89      16*n   cipherdata  AES-256-CBC, PKCS7 padding
+<section id="key-mode">
+<h2>Key mode<a class="headerlink" href="#key-mode" title="Link to this heading">#</a></h2>
+<p>Encryption with a random 32-byte key, without key derivation: each call takes microseconds.
+Meant for envelope encryption (many secrets protected by a random data key, the data key itself
+protected by a password with <a class="reference internal" href="#pyaescbc.encrypt" title="pyaescbc.encrypt"><code class="xref py py-func docutils literal notranslate"><span class="pre">pyaescbc.encrypt()</span></code></a>). Produces <code class="docutils literal notranslate"><span class="pre">PACK</span></code> bundles.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>The key must come from <a class="reference internal" href="#pyaescbc.generate_key" title="pyaescbc.generate_key"><code class="xref py py-func docutils literal notranslate"><span class="pre">pyaescbc.generate_key()</span></code></a>. Never use a password as key: it
+would get no brute-force protection. Use the password mode for passwords.</p>
+</div>
+<dl class="py function">
+<dt class="sig sig-object py" id="pyaescbc.encrypt_with_key">
+<span class="sig-prename descclassname"><span class="pre">pyaescbc.</span></span><span class="sig-name descname"><span class="pre">encrypt_with_key</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cleardata</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytearray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytearray</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">authdata</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytearray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delete_keys</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delete_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bytearray</span></span></span><a class="headerlink" href="#pyaescbc.encrypt_with_key" title="Link to this definition">#</a></dt>
+<dd><p>Encrypts the clear data with a random key into a key-mode bundle (no key derivation).</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>iv                = random
+aes_key, hmac_key = expand_key(key)                 (HKDF-Expand, no PBKDF2)
+cipherdata        = AES-256-CBC(aes_key, iv, cleardata)
+header            = magic "PACK" | version | iv
+hmac              = HMAC-SHA256(hmac_key, header, cipherdata, authdata)
+encrypted_bundle  = header | hmac | cipherdata
 </pre></div>
 </div>
-<p>The keys are derived as follows:</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>master_key = PBKDF2-HMAC-SHA256(password, salt, iterations, 32)
-aes_key    = HKDF-Expand-SHA256(master_key, "pyaescbc v2 aes-256-cbc key", 32)
-hmac_key   = HKDF-Expand-SHA256(master_key, "pyaescbc v2 hmac-sha256 key", 32)
-</pre></div>
+<p>The key mode is meant for envelope encryption: a random key (see
+<code class="docutils literal notranslate"><span class="pre">pyaescbc.generate_key</span></code>) encrypts many small messages quickly, and the key itself
+is stored encrypted with a password using <code class="docutils literal notranslate"><span class="pre">pyaescbc.encrypt</span></code>. Unlike
+<code class="docutils literal notranslate"><span class="pre">pyaescbc.encrypt</span></code>, there is no key derivation: each call takes microseconds.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p><code class="docutils literal notranslate"><span class="pre">key</span></code> must be uniformly random (from <code class="docutils literal notranslate"><span class="pre">pyaescbc.generate_key</span></code>). <strong>Never use a
+password as key</strong>: it would be encrypted without any brute-force protection.
+Use <code class="docutils literal notranslate"><span class="pre">pyaescbc.encrypt</span></code> for passwords.</p>
 </div>
-<p>The HMAC authenticates each field prefixed by its length (8-byte big-endian):</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>hmac = HMAC-SHA256(hmac_key, len(header)     || header
-                          || len(cipherdata) || cipherdata
-                          || len(authdata)   || authdata)
-</pre></div>
-</div>
-</section>
-<section id="low-level-components">
-<h2>Low-Level Components<a class="headerlink" href="#low-level-components" title="Link to this heading">#</a></h2>
-<p>The lower-level building blocks used internally by <a class="reference internal" href="#pyaescbc.encrypt" title="pyaescbc.encrypt"><code class="xref py py-func docutils literal notranslate"><span class="pre">pyaescbc.encrypt()</span></code></a> and
-<a class="reference internal" href="#pyaescbc.decrypt" title="pyaescbc.decrypt"><code class="xref py py-func docutils literal notranslate"><span class="pre">pyaescbc.decrypt()</span></code></a> (key derivation, HMAC creation and verification, bundle
-packing/unpacking, and random data generation). Most users will not need to call
-these directly.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>The raw AES-CBC functions are internal and intentionally not part of the public API:
-decrypting unauthenticated data exposes a padding oracle. Use <a class="reference internal" href="#pyaescbc.encrypt" title="pyaescbc.encrypt"><code class="xref py py-func docutils literal notranslate"><span class="pre">pyaescbc.encrypt()</span></code></a>
-and <a class="reference internal" href="#pyaescbc.decrypt" title="pyaescbc.decrypt"><code class="xref py py-func docutils literal notranslate"><span class="pre">pyaescbc.decrypt()</span></code></a> instead.</p>
+<p>An alias for this function is <code class="docutils literal notranslate"><span class="pre">encrypt_with_key</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pyaescbc</span>
+
+<span class="n">key</span> <span class="o">=</span> <span class="n">pyaescbc</span><span class="o">.</span><span class="n">generate_key</span><span class="p">()</span>
+<span class="n">cleardata</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">(</span><span class="s2">"Hello, World!"</span><span class="p">,</span> <span class="s1">'utf-8'</span><span class="p">)</span>
+<span class="n">authdata</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">(</span><span class="s2">"entry=42"</span><span class="p">,</span> <span class="s1">'utf-8'</span><span class="p">)</span>  <span class="c1"># optional</span>
+<span class="n">encrypted_bundle</span> <span class="o">=</span> <span class="n">pyaescbc</span><span class="o">.</span><span class="n">encrypt_with_key</span><span class="p">(</span><span class="n">cleardata</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">authdata</span><span class="o">=</span><span class="n">authdata</span><span class="p">)</span>
+</pre></div>
 </div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Memory wiping is best-effort: Python and the underlying libraries may keep
+immutable copies of sensitive data.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cleardata</strong> (<em>bytearray</em>) – The clear message to encrypt. It may be empty.</p></li>
+<li><p><strong>key</strong> (<em>bytearray</em>) – The 32-byte random key.</p></li>
+<li><p><strong>authdata</strong> (<em>Optional</em><em>[</em><em>bytearray</em><em>]</em>) – Optional additional authenticated data (keyword-only). It is authenticated by the
+HMAC but neither encrypted nor stored in the bundle: the same value must be given
+for decryption. It is never modified by this function.</p></li>
+<li><p><strong>delete_keys</strong> (<em>bool</em>) – Wipe the <code class="docutils literal notranslate"><span class="pre">key</span></code> at the end of the function, even if an error occurs.
+Default is False: a key-mode key is usually reused for many messages.</p></li>
+<li><p><strong>delete_data</strong> (<em>bool</em>) – Wipe the <code class="docutils literal notranslate"><span class="pre">cleardata</span></code> at the end of the function, only if the encryption succeeded
+(the clear data is never destroyed when no encrypted bundle was produced).
+Default is True.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>encrypted_bundle</strong> – The key-mode encrypted bundle.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bytearray</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>TypeError</strong> – If an argument is of the wrong type.</p></li>
+<li><p><strong>ValueError</strong> – If <code class="docutils literal notranslate"><span class="pre">key</span></code> is not 32 bytes long.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyaescbc.decrypt_with_key">
+<span class="sig-prename descclassname"><span class="pre">pyaescbc.</span></span><span class="sig-name descname"><span class="pre">decrypt_with_key</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">encrypted_bundle</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytearray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytearray</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">authdata</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytearray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delete_keys</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delete_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bytearray</span></span></span><a class="headerlink" href="#pyaescbc.decrypt_with_key" title="Link to this definition">#</a></dt>
+<dd><p>Decrypts a key-mode bundle (key format version 1) and returns the clear data.</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>header | hmac | cipherdata = encrypted_bundle      (structure checked first)
+aes_key, hmac_key          = expand_key(key)
+check  HMAC-SHA256(hmac_key, header, cipherdata, authdata) == hmac   (constant time)
+cleardata                  = AES-256-CBC-decrypt(aes_key, iv, cipherdata)
+</pre></div>
+</div>
+<p>The cipherdata is decrypted only after the HMAC has been verified.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>An alias for this function is <code class="docutils literal notranslate"><span class="pre">decrypt_with_key</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pyaescbc</span>
+
+<span class="n">authdata</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">(</span><span class="s2">"entry=42"</span><span class="p">,</span> <span class="s1">'utf-8'</span><span class="p">)</span>  <span class="c1"># same value as for encryption</span>
+<span class="n">cleardata</span> <span class="o">=</span> <span class="n">pyaescbc</span><span class="o">.</span><span class="n">decrypt_with_key</span><span class="p">(</span><span class="n">encrypted_bundle</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">authdata</span><span class="o">=</span><span class="n">authdata</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Memory wiping is best-effort: Python and the underlying libraries may keep
+immutable copies of sensitive data.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>encrypted_bundle</strong> (<em>bytearray</em>) – The key-mode bundle created by <code class="docutils literal notranslate"><span class="pre">pyaescbc.encrypt_with_key</span></code>.</p></li>
+<li><p><strong>key</strong> (<em>bytearray</em>) – The 32-byte key used for encryption.</p></li>
+<li><p><strong>authdata</strong> (<em>Optional</em><em>[</em><em>bytearray</em><em>]</em>) – The additional authenticated data given at encryption, keyword-only
+(<code class="docutils literal notranslate"><span class="pre">None</span></code> if none was given). It is never modified by this function.</p></li>
+<li><p><strong>delete_keys</strong> (<em>bool</em>) – Wipe the <code class="docutils literal notranslate"><span class="pre">key</span></code> at the end of the function, even if an error occurs.
+Default is False: a key-mode key is usually reused for many messages.</p></li>
+<li><p><strong>delete_data</strong> (<em>bool</em>) – Wipe the <code class="docutils literal notranslate"><span class="pre">encrypted_bundle</span></code> at the end of the function, only if the decryption
+succeeded (the bundle is never destroyed after a failed attempt).
+Default is False: the bundle is not secret.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>cleardata</strong> – The decrypted clear data.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bytearray</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>TypeError</strong> – If an argument is of the wrong type.</p></li>
+<li><p><strong>ValueError</strong> – If <code class="docutils literal notranslate"><span class="pre">key</span></code> is not 32 bytes long, or the bundle is malformed or is a
+    password-mode bundle (use <code class="docutils literal notranslate"><span class="pre">pyaescbc.decrypt</span></code> for those).</p></li>
+<li><p><a class="reference internal" href="#pyaescbc.AuthError" title="pyaescbc.AuthError"><strong>AuthError</strong></a> – If the key or the authdata is wrong, or if the bundle has been tampered with.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyaescbc.generate_key">
+<span class="sig-prename descclassname"><span class="pre">pyaescbc.</span></span><span class="sig-name descname"><span class="pre">generate_key</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bytearray</span></span></span><a class="reference internal" href="_modules/pyaescbc/_key_mode/expand_key.html#generate_key"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyaescbc.generate_key" title="Link to this definition">#</a></dt>
+<dd><p>Generates a random key for the key mode (<code class="docutils literal notranslate"><span class="pre">pyaescbc.encrypt_with_key</span></code>).</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pyaescbc</span>
+
+<span class="n">key</span> <span class="o">=</span> <span class="n">pyaescbc</span><span class="o">.</span><span class="n">generate_key</span><span class="p">()</span>  <span class="c1"># 32 random bytes</span>
+</pre></div>
+</div>
+<p>The key must be kept secret. To store it, encrypt it with a password using
+<code class="docutils literal notranslate"><span class="pre">pyaescbc.encrypt</span></code> (“key wrapping”): the slow key derivation then runs once,
+when the key is unwrapped, instead of once per message.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>key</strong> – <a class="reference internal" href="#pyaescbc.KEY_SIZE" title="pyaescbc.KEY_SIZE"><code class="xref py py-data docutils literal notranslate"><span class="pre">KEY_SIZE</span></code></a> (32) bytes from the operating system CSPRNG.
+Wipe it with <code class="docutils literal notranslate"><span class="pre">pyaescbc.delete_bytearray</span></code> when it is no longer needed.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bytearray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="pyaescbc.KEY_SIZE">
+<span class="sig-prename descclassname"><span class="pre">pyaescbc.</span></span><span class="sig-name descname"><span class="pre">KEY_SIZE</span></span><span class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">32</span></span><a class="headerlink" href="#pyaescbc.KEY_SIZE" title="Link to this definition">#</a></dt>
+<dd><p>int([x]) -&gt; integer
+int(x, base=10) -&gt; integer</p>
+<p>Convert a number or string to an integer, or return 0 if no arguments
+are given.  If x is a number, return x.__int__().  For floating point
+numbers, this truncates towards zero.</p>
+<p>If x is not a number or if base is given, then x must be a string,
+bytes, or bytearray instance representing an integer literal in the
+given base.  The literal can be preceded by ‘+’ or ‘-’ and be surrounded
+by whitespace.  The base defaults to 10.  Valid bases are 0 and 2-36.
+Base 0 means to interpret the base from the string as an integer literal.
+&gt;&gt;&gt; int(‘0b100’, base=0)
+4</p>
+<p>Size in bytes of a key-mode key.</p>
+</dd></dl>
+
+</section>
+<section id="both-modes">
+<h2>Both modes<a class="headerlink" href="#both-modes" title="Link to this heading">#</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="pyaescbc.AuthError">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyaescbc.</span></span><span class="sig-name descname"><span class="pre">AuthError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">code</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyaescbc/_common/auth_error.html#AuthError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyaescbc.AuthError" title="Link to this definition">#</a></dt>
+<dd><p>Raised when the HMAC of a bundle does not match, i.e. when:</p>
+<ul class="simple">
+<li><p>the password (<code class="docutils literal notranslate"><span class="pre">decrypt</span></code>) or the key (<code class="docutils literal notranslate"><span class="pre">decrypt_with_key</span></code>) is wrong;</p></li>
+<li><p>the <code class="docutils literal notranslate"><span class="pre">authdata</span></code> differs from the one given at encryption;</p></li>
+<li><p>or the bundle has been tampered with.</p></li>
+</ul>
+<p>These cases are deliberately indistinguishable. A malformed bundle (wrong size,
+unknown magic or version) raises a <code class="docutils literal notranslate"><span class="pre">ValueError</span></code> instead, before any key derivation.</p>
+<p>The message is displayed as follows when a code is given:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">AuthError: [&lt;code&gt;] &lt;message&gt;</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pyaescbc</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">cleardata</span> <span class="o">=</span> <span class="n">pyaescbc</span><span class="o">.</span><span class="n">decrypt</span><span class="p">(</span><span class="n">encrypted_bundle</span><span class="p">,</span> <span class="n">password</span><span class="p">)</span>
+<span class="k">except</span> <span class="n">pyaescbc</span><span class="o">.</span><span class="n">AuthError</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"Wrong password."</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>message</strong> (<em>str</em><em>, </em><em>optional</em>) – The error message. Default is <code class="docutils literal notranslate"><span class="pre">&quot;&quot;</span></code>.</p></li>
+<li><p><strong>code</strong> (<em>Optional</em><em>[</em><em>int</em><em>]</em><em>, </em><em>optional</em>) – An optional error code. Default is <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyaescbc.AuthError.message">
+<span class="sig-name descname"><span class="pre">message</span></span><a class="headerlink" href="#pyaescbc.AuthError.message" title="Link to this definition">#</a></dt>
+<dd><p>The error message.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyaescbc.AuthError.code">
+<span class="sig-name descname"><span class="pre">code</span></span><a class="headerlink" href="#pyaescbc.AuthError.code" title="Link to this definition">#</a></dt>
+<dd><p>The error code, or <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Optional[int]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyaescbc.delete_bytearray">
+<span class="sig-prename descclassname"><span class="pre">pyaescbc.</span></span><span class="sig-name descname"><span class="pre">delete_bytearray</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">barray</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytearray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/pyaescbc/_common/delete_bytearray.html#delete_bytearray"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyaescbc.delete_bytearray" title="Link to this definition">#</a></dt>
+<dd><p>Overwrites the contents of a bytearray with zeros, then empties it.</p>
+<p>After the call, <code class="docutils literal notranslate"><span class="pre">barray</span></code> is an empty bytearray (<code class="docutils literal notranslate"><span class="pre">len(barray)</span> <span class="pre">==</span> <span class="pre">0</span></code>); the object
+itself still exists. If the bytearray cannot be resized because a <code class="docutils literal notranslate"><span class="pre">memoryview</span></code> on
+it is still open, its contents are zeroed but its length is kept.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Wiping is best-effort: Python and the underlying libraries may have made
+immutable copies of the data, which cannot be erased.</p>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pyaescbc</span>
+
+<span class="n">key</span> <span class="o">=</span> <span class="n">pyaescbc</span><span class="o">.</span><span class="n">generate_key</span><span class="p">()</span>
+<span class="o">...</span>
+<span class="n">pyaescbc</span><span class="o">.</span><span class="n">delete_bytearray</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>   <span class="c1"># key == bytearray()</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>barray</strong> (<em>bytearray</em>) – The bytearray to wipe.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>TypeError</strong> – If the given argument is not a <code class="docutils literal notranslate"><span class="pre">bytearray</span></code> instance.</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py data">
 <dt class="sig sig-object py" id="pyaescbc.__version__">
-<span class="sig-prename descclassname"><span class="pre">pyaescbc.</span></span><span class="sig-name descname"><span class="pre">__version__</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'2.1.0'</span></em><a class="headerlink" href="#pyaescbc.__version__" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pyaescbc.</span></span><span class="sig-name descname"><span class="pre">__version__</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'3.0.0'</span></span><a class="headerlink" href="#pyaescbc.__version__" title="Link to this definition">#</a></dt>
 <dd><p>str(object=’’) -&gt; str
 str(bytes_or_buffer[, encoding[, errors]]) -&gt; str</p>
 <p>Create a new string object from the given object. If encoding or
@@ -596,384 +814,77 @@ encoding defaults to sys.getdefaultencoding().
 errors defaults to ‘strict’.</p>
 </dd></dl>
 
-<section id="key-derivation">
-<h3>Key derivation<a class="headerlink" href="#key-derivation" title="Link to this heading">#</a></h3>
-<dl class="py function">
-<dt class="sig sig-object py" id="pyaescbc.derive_key">
-<span class="sig-prename descclassname"><span class="pre">pyaescbc.</span></span><span class="sig-name descname"><span class="pre">derive_key</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">password</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytearray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">salt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytearray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iterations</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bytearray</span></span></span><a class="reference internal" href="_modules/pyaescbc/derive_key.html#derive_key"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyaescbc.derive_key" title="Link to this definition">#</a></dt>
-<dd><p>Derives the 64-byte key material (AES key + HMAC key) from a password.</p>
-<p>The derivation is done in two steps:</p>
-<ol class="arabic simple">
-<li><p>A 32-byte master key is derived from the password with PBKDF2-HMAC-SHA256
-(the slow, brute-force resistant step).</p></li>
-<li><p>Two independent 32-byte keys are expanded from the master key with HKDF-SHA256,
-using distinct context labels (the fast, key separation step).</p></li>
-</ol>
+</section>
+<section id="deprecated-names">
+<h2>Deprecated names<a class="headerlink" href="#deprecated-names" title="Link to this heading">#</a></h2>
+<p>The low-level building blocks that were public in pyaescbc 2.1 and earlier are now internal:
+<code class="docutils literal notranslate"><span class="pre">cleardata_to_encrypted_bundle</span></code>, <code class="docutils literal notranslate"><span class="pre">encrypted_bundle_to_cleardata</span></code>, <code class="docutils literal notranslate"><span class="pre">derive_key</span></code>,
+<code class="docutils literal notranslate"><span class="pre">create_bundle_header</span></code>, <code class="docutils literal notranslate"><span class="pre">create_encrypted_bundle</span></code>, <code class="docutils literal notranslate"><span class="pre">extract_cryptography_components</span></code>,
+<code class="docutils literal notranslate"><span class="pre">BundleComponents</span></code>, <code class="docutils literal notranslate"><span class="pre">create_hmac</span></code>, <code class="docutils literal notranslate"><span class="pre">check_hmac</span></code>, <code class="docutils literal notranslate"><span class="pre">random_bytearray</span></code>, <code class="docutils literal notranslate"><span class="pre">random_iv</span></code> and
+<code class="docutils literal notranslate"><span class="pre">random_salt</span></code>.</p>
+<p>They can still be accessed as attributes of <code class="docutils literal notranslate"><span class="pre">pyaescbc</span></code> but emit a <code class="docutils literal notranslate"><span class="pre">DeprecationWarning</span></code>,
+and will be removed in the next major version. Use <a class="reference internal" href="#pyaescbc.encrypt" title="pyaescbc.encrypt"><code class="xref py py-func docutils literal notranslate"><span class="pre">pyaescbc.encrypt()</span></code></a>,
+<a class="reference internal" href="#pyaescbc.decrypt" title="pyaescbc.decrypt"><code class="xref py py-func docutils literal notranslate"><span class="pre">pyaescbc.decrypt()</span></code></a>, <a class="reference internal" href="#pyaescbc.encrypt_with_key" title="pyaescbc.encrypt_with_key"><code class="xref py py-func docutils literal notranslate"><span class="pre">pyaescbc.encrypt_with_key()</span></code></a> and <a class="reference internal" href="#pyaescbc.decrypt_with_key" title="pyaescbc.decrypt_with_key"><code class="xref py py-func docutils literal notranslate"><span class="pre">pyaescbc.decrypt_with_key()</span></code></a>
+instead.</p>
+</section>
+<section id="bundle-formats">
+<h2>Bundle formats<a class="headerlink" href="#bundle-formats" title="Link to this heading">#</a></h2>
+<p>Both formats share the same layout: a format-specific header, the HMAC-SHA256 tag, then the
+AES-256-CBC cipherdata (PKCS7 padding). All integers are big-endian.</p>
+<p>The magic identifies the format: <a class="reference internal" href="#pyaescbc.decrypt" title="pyaescbc.decrypt"><code class="xref py py-func docutils literal notranslate"><span class="pre">pyaescbc.decrypt()</span></code></a> rejects key-mode bundles and
+<a class="reference internal" href="#pyaescbc.decrypt_with_key" title="pyaescbc.decrypt_with_key"><code class="xref py py-func docutils literal notranslate"><span class="pre">pyaescbc.decrypt_with_key()</span></code></a> rejects password-mode bundles, with an explicit
+<code class="docutils literal notranslate"><span class="pre">ValueError</span></code>, before any computation.</p>
+<section id="password-mode-bundle-pacb-format-version-2">
+<h3>Password-mode bundle (<code class="docutils literal notranslate"><span class="pre">PACB</span></code>, format version 2)<a class="headerlink" href="#password-mode-bundle-pacb-format-version-2" title="Link to this heading">#</a></h3>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>offset  size   field
+0       4      magic       b"PACB"
+4       1      version     2
+5       4      iterations  uint32
+9       32     salt
+41      16     iv
+--------------------------- header (57 bytes, authenticated by the HMAC)
+57      32     hmac        HMAC-SHA256
+89      16*n   cipherdata  AES-256-CBC, PKCS7 padding
+</pre></div>
+</div>
+<p>The keys are derived from the password as follows:</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>master_key = PBKDF2-HMAC-SHA256(password, salt, iterations, 32)
 aes_key    = HKDF-Expand-SHA256(master_key, "pyaescbc v2 aes-256-cbc key", 32)
 hmac_key   = HKDF-Expand-SHA256(master_key, "pyaescbc v2 hmac-sha256 key", 32)
-derived_key = aes_key || hmac_key
 </pre></div>
 </div>
-<p>Deriving a single 32-byte PBKDF2 output (instead of 64) ensures that an attacker
-has to perform exactly the same amount of work as the legitimate user for each
-password guess.</p>
-<div class="admonition seealso">
-<p class="admonition-title">See also</p>
-<ul class="simple">
-<li><p>function <code class="xref py py-func docutils literal notranslate"><span class="pre">pyaescbc.encrypt_AES_CBC()</span></code> to encrypt the data using AES in CBC mode.</p></li>
-<li><p>function <code class="xref py py-func docutils literal notranslate"><span class="pre">pyaescbc.decrypt_AES_CBC()</span></code> to decrypt the data using AES in CBC mode.</p></li>
-<li><p>function <a class="reference internal" href="#pyaescbc.create_hmac" title="pyaescbc.create_hmac"><code class="xref py py-func docutils literal notranslate"><span class="pre">pyaescbc.create_hmac()</span></code></a> to create the HMAC of the data.</p></li>
-</ul>
-</div>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>This function does not modify or delete its inputs. Intermediate values produced
-by the <code class="docutils literal notranslate"><span class="pre">cryptography</span></code> library are immutable <code class="docutils literal notranslate"><span class="pre">bytes</span></code> and cannot be wiped.</p>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>password</strong> (<em>bytearray</em>) – The user password. It must not be empty.</p></li>
-<li><p><strong>salt</strong> (<em>bytearray</em>) – The 32-byte random salt (see <a class="reference internal" href="#pyaescbc.random_salt" title="pyaescbc.random_salt"><code class="xref py py-func docutils literal notranslate"><span class="pre">pyaescbc.random_salt()</span></code></a>).</p></li>
-<li><p><strong>iterations</strong> (<em>int</em>) – The number of PBKDF2 iterations, between <code class="docutils literal notranslate"><span class="pre">MIN_ITERATIONS</span></code> (100 000)
-and <code class="docutils literal notranslate"><span class="pre">MAX_ITERATIONS</span></code> (100 000 000).</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>derived_key</strong> – The derived 64-byte key: <code class="docutils literal notranslate"><span class="pre">derived_key[:32]</span></code> is the AES key and
-<code class="docutils literal notranslate"><span class="pre">derived_key[32:]</span></code> is the HMAC key.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>bytearray</p>
-</dd>
-<dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><ul class="simple">
-<li><p><strong>TypeError</strong> – If the arguments are not of the correct types.</p></li>
-<li><p><strong>ValueError</strong> – If <code class="docutils literal notranslate"><span class="pre">password</span></code> is empty, <code class="docutils literal notranslate"><span class="pre">salt</span></code> is not 32 bytes long, or <code class="docutils literal notranslate"><span class="pre">iterations</span></code>
-    is out of the allowed range.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py data">
-<dt class="sig sig-object py" id="pyaescbc.MIN_ITERATIONS">
-<span class="sig-prename descclassname"><span class="pre">pyaescbc.</span></span><span class="sig-name descname"><span class="pre">MIN_ITERATIONS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">100000</span></em><a class="headerlink" href="#pyaescbc.MIN_ITERATIONS" title="Link to this definition">#</a></dt>
-<dd><p>int([x]) -&gt; integer
-int(x, base=10) -&gt; integer</p>
-<p>Convert a number or string to an integer, or return 0 if no arguments
-are given.  If x is a number, return x.__int__().  For floating point
-numbers, this truncates towards zero.</p>
-<p>If x is not a number or if base is given, then x must be a string,
-bytes, or bytearray instance representing an integer literal in the
-given base.  The literal can be preceded by ‘+’ or ‘-’ and be surrounded
-by whitespace.  The base defaults to 10.  Valid bases are 0 and 2-36.
-Base 0 means to interpret the base from the string as an integer literal.
-&gt;&gt;&gt; int(‘0b100’, base=0)
-4</p>
-</dd></dl>
-
-<dl class="py data">
-<dt class="sig sig-object py" id="pyaescbc.MAX_ITERATIONS">
-<span class="sig-prename descclassname"><span class="pre">pyaescbc.</span></span><span class="sig-name descname"><span class="pre">MAX_ITERATIONS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">100000000</span></em><a class="headerlink" href="#pyaescbc.MAX_ITERATIONS" title="Link to this definition">#</a></dt>
-<dd><p>int([x]) -&gt; integer
-int(x, base=10) -&gt; integer</p>
-<p>Convert a number or string to an integer, or return 0 if no arguments
-are given.  If x is a number, return x.__int__().  For floating point
-numbers, this truncates towards zero.</p>
-<p>If x is not a number or if base is given, then x must be a string,
-bytes, or bytearray instance representing an integer literal in the
-given base.  The literal can be preceded by ‘+’ or ‘-’ and be surrounded
-by whitespace.  The base defaults to 10.  Valid bases are 0 and 2-36.
-Base 0 means to interpret the base from the string as an integer literal.
-&gt;&gt;&gt; int(‘0b100’, base=0)
-4</p>
-</dd></dl>
-
 </section>
-<section id="authentication">
-<h3>Authentication<a class="headerlink" href="#authentication" title="Link to this heading">#</a></h3>
-<dl class="py function">
-<dt class="sig sig-object py" id="pyaescbc.create_hmac">
-<span class="sig-prename descclassname"><span class="pre">pyaescbc.</span></span><span class="sig-name descname"><span class="pre">create_hmac</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hmac_key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytearray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">header</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytearray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cipherdata</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytearray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">authdata</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytearray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bytearray</span></span></span><a class="reference internal" href="_modules/pyaescbc/create_hmac.html#create_hmac"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyaescbc.create_hmac" title="Link to this definition">#</a></dt>
-<dd><p>Creates the HMAC-SHA256 tag authenticating the header, the cipherdata and the optional authdata.</p>
-<p>Each field is prefixed with its length encoded as an 8-byte big-endian unsigned integer.
-This makes the encoding unambiguous: bytes cannot be moved from one field to another
-(for example from the end of <code class="docutils literal notranslate"><span class="pre">cipherdata</span></code> to the beginning of <code class="docutils literal notranslate"><span class="pre">authdata</span></code>) without
-changing the tag.</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>tag = HMAC-SHA256(hmac_key, len(header) || header || len(cipherdata) || cipherdata || len(authdata) || authdata)
+<section id="key-mode-bundle-pack-format-version-1">
+<h3>Key-mode bundle (<code class="docutils literal notranslate"><span class="pre">PACK</span></code>, format version 1)<a class="headerlink" href="#key-mode-bundle-pack-format-version-1" title="Link to this heading">#</a></h3>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>offset  size   field
+0       4      magic       b"PACK"
+4       1      version     1
+5       16     iv
+--------------------------- header (21 bytes, authenticated by the HMAC)
+21      32     hmac        HMAC-SHA256
+53      16*n   cipherdata  AES-256-CBC, PKCS7 padding
 </pre></div>
 </div>
-<p>The <code class="docutils literal notranslate"><span class="pre">header</span></code> must contain every public parameter needed to decrypt the bundle
-(version, iterations, salt, iv, …) so that none of them can be tampered with.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p><code class="docutils literal notranslate"><span class="pre">authdata=None</span></code> and an empty <code class="docutils literal notranslate"><span class="pre">authdata</span></code> produce the same tag.</p>
+<p>The keys are expanded from the 32-byte key, with labels distinct from the password mode
+(the same 32 bytes never give the same keys in both modes):</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>aes_key    = HKDF-Expand-SHA256(key, "pyaescbc key-mode v1 aes-256-cbc key", 32)
+hmac_key   = HKDF-Expand-SHA256(key, "pyaescbc key-mode v1 hmac-sha256 key", 32)
+</pre></div>
 </div>
-<div class="admonition seealso">
-<p class="admonition-title">See also</p>
-<ul class="simple">
-<li><p>function <a class="reference internal" href="#pyaescbc.derive_key" title="pyaescbc.derive_key"><code class="xref py py-func docutils literal notranslate"><span class="pre">pyaescbc.derive_key()</span></code></a> to create the HMAC key.</p></li>
-<li><p>function <a class="reference internal" href="#pyaescbc.check_hmac" title="pyaescbc.check_hmac"><code class="xref py py-func docutils literal notranslate"><span class="pre">pyaescbc.check_hmac()</span></code></a> to compare two tags in constant time.</p></li>
-</ul>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>hmac_key</strong> (<em>bytearray</em>) – The 32-byte key used to create the HMAC (<code class="docutils literal notranslate"><span class="pre">derived_key[32:]</span></code>).</p></li>
-<li><p><strong>header</strong> (<em>bytearray</em>) – The public header of the encrypted bundle (everything before the cipherdata).</p></li>
-<li><p><strong>cipherdata</strong> (<em>bytearray</em>) – The encrypted message.</p></li>
-<li><p><strong>authdata</strong> (<em>Optional</em><em>[</em><em>bytearray</em><em>]</em>) – Optional additional authenticated data (not encrypted, not stored in the bundle).</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>expected_hmac</strong> – The 32-byte HMAC tag.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>bytearray</p>
-</dd>
-<dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><ul class="simple">
-<li><p><strong>TypeError</strong> – If any argument is not a <code class="docutils literal notranslate"><span class="pre">bytearray</span></code> instance.</p></li>
-<li><p><strong>ValueError</strong> – If <code class="docutils literal notranslate"><span class="pre">hmac_key</span></code> isn’t 32 bytes long.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="pyaescbc.check_hmac">
-<span class="sig-prename descclassname"><span class="pre">pyaescbc.</span></span><span class="sig-name descname"><span class="pre">check_hmac</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">given_hmac</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytearray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expected_hmac</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytearray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/pyaescbc/check_hmac.html#check_hmac"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyaescbc.check_hmac" title="Link to this definition">#</a></dt>
-<dd><p>Verifies if the derived 32-byte given HMAC matches the expected HMAC.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>given_hmac</strong> (<em>bytearray</em>) – The 32-byte long HMAC to verify.</p></li>
-<li><p><strong>expected_hmac</strong> (<em>bytearray</em>) – The 32-byte long expected HMAC.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>True if the HMACs match, False otherwise.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>bool</p>
-</dd>
-<dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><ul class="simple">
-<li><p><strong>TypeError</strong> – If any argument is not a <code class="docutils literal notranslate"><span class="pre">bytearray</span></code> instance.</p></li>
-<li><p><strong>ValueError</strong> – If the given_hmac or expected_hmac isn’t 32 bytes.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
+<p>There is no salt and no iteration count: the key is random, there is nothing to stretch.</p>
 </section>
-<section id="bundle-packing-unpacking">
-<h3>Bundle packing / unpacking<a class="headerlink" href="#bundle-packing-unpacking" title="Link to this heading">#</a></h3>
-<dl class="py function">
-<dt class="sig sig-object py" id="pyaescbc.create_bundle_header">
-<span class="sig-prename descclassname"><span class="pre">pyaescbc.</span></span><span class="sig-name descname"><span class="pre">create_bundle_header</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iterations</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">salt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytearray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iv</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytearray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bytearray</span></span></span><a class="reference internal" href="_modules/pyaescbc/create_encrypted_bundle.html#create_bundle_header"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyaescbc.create_bundle_header" title="Link to this definition">#</a></dt>
-<dd><p>Creates the public header of an encrypted bundle (format version 2).</p>
-<p>The header contains every public parameter needed to decrypt the data and must be
-authenticated by the HMAC (see <a class="reference internal" href="#pyaescbc.create_hmac" title="pyaescbc.create_hmac"><code class="xref py py-func docutils literal notranslate"><span class="pre">pyaescbc.create_hmac()</span></code></a>).</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>header = magic (4) | version (1) | iterations (4) | salt (32) | iv (16)
+<section id="hmac-both-formats">
+<h3>HMAC (both formats)<a class="headerlink" href="#hmac-both-formats" title="Link to this heading">#</a></h3>
+<p>The HMAC authenticates the whole header, the cipherdata and the optional <code class="docutils literal notranslate"><span class="pre">authdata</span></code>, each
+field prefixed by its length (8-byte big-endian), so that no byte can be moved from one field
+to another:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>hmac = HMAC-SHA256(hmac_key, len(header)     || header
+                          || len(cipherdata) || cipherdata
+                          || len(authdata)   || authdata)
 </pre></div>
 </div>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>iterations</strong> (<em>int</em>) – The number of PBKDF2 iterations used to derive the key.</p></li>
-<li><p><strong>salt</strong> (<em>bytearray</em>) – The 32-byte salt used to derive the key.</p></li>
-<li><p><strong>iv</strong> (<em>bytearray</em>) – The 16-byte initialization vector used for encryption.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>header</strong> – The 57-byte header.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>bytearray</p>
-</dd>
-<dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><ul class="simple">
-<li><p><strong>TypeError</strong> – If an argument is not of the correct type.</p></li>
-<li><p><strong>ValueError</strong> – If <code class="docutils literal notranslate"><span class="pre">iterations</span></code> is out of range or <code class="docutils literal notranslate"><span class="pre">salt</span></code> / <code class="docutils literal notranslate"><span class="pre">iv</span></code> have the wrong length.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="pyaescbc.create_encrypted_bundle">
-<span class="sig-prename descclassname"><span class="pre">pyaescbc.</span></span><span class="sig-name descname"><span class="pre">create_encrypted_bundle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">header</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytearray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expected_hmac</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytearray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cipherdata</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytearray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bytearray</span></span></span><a class="reference internal" href="_modules/pyaescbc/create_encrypted_bundle.html#create_encrypted_bundle"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyaescbc.create_encrypted_bundle" title="Link to this definition">#</a></dt>
-<dd><p>Creates the encrypted bundle containing all the information needed to decrypt the data.</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>encrypted_bundle = header (57) | hmac (32) | cipherdata (16*n)
-</pre></div>
-</div>
-<div class="admonition seealso">
-<p class="admonition-title">See also</p>
-<ul class="simple">
-<li><p>function <a class="reference internal" href="#pyaescbc.create_bundle_header" title="pyaescbc.create_bundle_header"><code class="xref py py-func docutils literal notranslate"><span class="pre">pyaescbc.create_bundle_header()</span></code></a> to create the header.</p></li>
-<li><p>function <a class="reference internal" href="#pyaescbc.extract_cryptography_components" title="pyaescbc.extract_cryptography_components"><code class="xref py py-func docutils literal notranslate"><span class="pre">pyaescbc.extract_cryptography_components()</span></code></a> to parse the bundle.</p></li>
-</ul>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>header</strong> (<em>bytearray</em>) – The 57-byte header created by <a class="reference internal" href="#pyaescbc.create_bundle_header" title="pyaescbc.create_bundle_header"><code class="xref py py-func docutils literal notranslate"><span class="pre">pyaescbc.create_bundle_header()</span></code></a>.</p></li>
-<li><p><strong>expected_hmac</strong> (<em>bytearray</em>) – The 32-byte HMAC computed over the header, the cipherdata and the authdata.</p></li>
-<li><p><strong>cipherdata</strong> (<em>bytearray</em>) – The encrypted message (length is a positive multiple of 16).</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>encrypted_bundle</strong> – The encrypted bundle.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>bytearray</p>
-</dd>
-<dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><ul class="simple">
-<li><p><strong>TypeError</strong> – If any argument is not a <code class="docutils literal notranslate"><span class="pre">bytearray</span></code> instance.</p></li>
-<li><p><strong>ValueError</strong> – If any component has an invalid length or the header is not a version 2 header.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="pyaescbc.extract_cryptography_components">
-<span class="sig-prename descclassname"><span class="pre">pyaescbc.</span></span><span class="sig-name descname"><span class="pre">extract_cryptography_components</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">encrypted_bundle</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytearray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pyaescbc.BundleComponents" title="pyaescbc.extract_cryptography_components.BundleComponents"><span class="pre">BundleComponents</span></a></span></span><a class="reference internal" href="_modules/pyaescbc/extract_cryptography_components.html#extract_cryptography_components"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyaescbc.extract_cryptography_components" title="Link to this definition">#</a></dt>
-<dd><p>Parses and validates a version 2 encrypted bundle.</p>
-<p>The structure of the bundle is validated (magic, version, iteration bounds, lengths)
-BEFORE any key derivation, so that a malformed or malicious bundle is rejected cheaply.
-The data is NOT authenticated by this function: the HMAC must be checked afterwards.</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>encrypted_bundle = magic (4) | version (1) | iterations (4) | salt (32) | iv (16)
-                 | hmac (32) | cipherdata (16*n)
-</pre></div>
-</div>
-<div class="admonition seealso">
-<p class="admonition-title">See also</p>
-<ul class="simple">
-<li><p>function <a class="reference internal" href="#pyaescbc.create_encrypted_bundle" title="pyaescbc.create_encrypted_bundle"><code class="xref py py-func docutils literal notranslate"><span class="pre">pyaescbc.create_encrypted_bundle()</span></code></a> to create the encrypted bundle.</p></li>
-</ul>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>encrypted_bundle</strong> (<em>bytearray</em>) – The encrypted bundle. It is not modified.</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Named tuple <code class="docutils literal notranslate"><span class="pre">(header,</span> <span class="pre">iterations,</span> <span class="pre">salt,</span> <span class="pre">iv,</span> <span class="pre">expected_hmac,</span> <span class="pre">cipherdata)</span></code>.
-<code class="docutils literal notranslate"><span class="pre">header</span></code> is the exact byte sequence to authenticate with <a class="reference internal" href="#pyaescbc.create_hmac" title="pyaescbc.create_hmac"><code class="xref py py-func docutils literal notranslate"><span class="pre">pyaescbc.create_hmac()</span></code></a>.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="#pyaescbc.BundleComponents" title="pyaescbc.BundleComponents">BundleComponents</a></p>
-</dd>
-<dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><ul class="simple">
-<li><p><strong>TypeError</strong> – If the argument is not a <code class="docutils literal notranslate"><span class="pre">bytearray</span></code> instance.</p></li>
-<li><p><strong>ValueError</strong> – If the bundle is malformed, has an unknown magic or version, or its iteration
-    count is out of the allowed range.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="pyaescbc.BundleComponents">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyaescbc.</span></span><span class="sig-name descname"><span class="pre">BundleComponents</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">header</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytearray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iterations</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">salt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytearray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iv</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytearray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expected_hmac</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytearray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cipherdata</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytearray</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyaescbc/extract_cryptography_components.html#BundleComponents"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyaescbc.BundleComponents" title="Link to this definition">#</a></dt>
-<dd><p>Components of a version 2 encrypted bundle (all byte fields are copies).</p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pyaescbc.BundleComponents.cipherdata">
-<span class="sig-name descname"><span class="pre">cipherdata</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bytearray</span></em><a class="headerlink" href="#pyaescbc.BundleComponents.cipherdata" title="Link to this definition">#</a></dt>
-<dd><p>Alias for field number 5</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pyaescbc.BundleComponents.expected_hmac">
-<span class="sig-name descname"><span class="pre">expected_hmac</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bytearray</span></em><a class="headerlink" href="#pyaescbc.BundleComponents.expected_hmac" title="Link to this definition">#</a></dt>
-<dd><p>Alias for field number 4</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pyaescbc.BundleComponents.header">
-<span class="sig-name descname"><span class="pre">header</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bytearray</span></em><a class="headerlink" href="#pyaescbc.BundleComponents.header" title="Link to this definition">#</a></dt>
-<dd><p>Alias for field number 0</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pyaescbc.BundleComponents.iterations">
-<span class="sig-name descname"><span class="pre">iterations</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#pyaescbc.BundleComponents.iterations" title="Link to this definition">#</a></dt>
-<dd><p>Alias for field number 1</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pyaescbc.BundleComponents.iv">
-<span class="sig-name descname"><span class="pre">iv</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bytearray</span></em><a class="headerlink" href="#pyaescbc.BundleComponents.iv" title="Link to this definition">#</a></dt>
-<dd><p>Alias for field number 3</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pyaescbc.BundleComponents.salt">
-<span class="sig-name descname"><span class="pre">salt</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bytearray</span></em><a class="headerlink" href="#pyaescbc.BundleComponents.salt" title="Link to this definition">#</a></dt>
-<dd><p>Alias for field number 2</p>
-</dd></dl>
-
-</dd></dl>
-
-</section>
-<section id="random-data-generation">
-<h3>Random data generation<a class="headerlink" href="#random-data-generation" title="Link to this heading">#</a></h3>
-<dl class="py function">
-<dt class="sig sig-object py" id="pyaescbc.random_bytearray">
-<span class="sig-prename descclassname"><span class="pre">pyaescbc.</span></span><span class="sig-name descname"><span class="pre">random_bytearray</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Nbytes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bytearray</span></span></span><a class="reference internal" href="_modules/pyaescbc/random_bytearray.html#random_bytearray"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyaescbc.random_bytearray" title="Link to this definition">#</a></dt>
-<dd><p>Generates a random bytearray of Nbytes length.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>Nbytes</strong> (<em>int</em>) – The number of bytes of the random bytearray. Must be a positive integer.</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>barray</strong> – A random bytearray of length Nbytes.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>bytearray</p>
-</dd>
-<dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><ul class="simple">
-<li><p><strong>TypeError</strong> – If <cite>Nbytes</cite> is not an integer.</p></li>
-<li><p><strong>ValueError</strong> – If <cite>Nbytes</cite> is not a positive integer.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="pyaescbc.random_iv">
-<span class="sig-prename descclassname"><span class="pre">pyaescbc.</span></span><span class="sig-name descname"><span class="pre">random_iv</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bytearray</span></span></span><a class="reference internal" href="_modules/pyaescbc/random_iv.html#random_iv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyaescbc.random_iv" title="Link to this definition">#</a></dt>
-<dd><p>Generates a random 16-byte initialization vector (IV) for AES encryption.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>iv</strong> – A random 16-byte bytearray to be used as an IV.</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>bytearray</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="pyaescbc.random_salt">
-<span class="sig-prename descclassname"><span class="pre">pyaescbc.</span></span><span class="sig-name descname"><span class="pre">random_salt</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bytearray</span></span></span><a class="reference internal" href="_modules/pyaescbc/random_salt.html#random_salt"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyaescbc.random_salt" title="Link to this definition">#</a></dt>
-<dd><p>Generates a random 32-byte salt for cryptographic purposes.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>salt</strong> – A random 32-byte bytearray to be used as a salt.</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>bytearray</p>
-</dd>
-</dl>
-</dd></dl>
-
+<p>The HMAC is verified in constant time before anything is decrypted. <code class="docutils literal notranslate"><span class="pre">authdata</span></code> is neither
+encrypted nor stored in the bundle: the same value must be given to decrypt.</p>
 </section>
 </section>
 </section>
@@ -1013,7 +924,7 @@ The data is NOT authenticated by this function: the HMAC must be checked afterwa
             
             
               
-                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <dialog id="pst-secondary-sidebar-modal" tabindex="-1"></dialog>
                 <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
 
@@ -1025,49 +936,36 @@ The data is NOT authenticated by this function: the HMAC must be checked afterwa
   </div>
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="pst-show_toc_level nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#encryption-decryption">Encryption / Decryption</a><ul class="nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#password-mode">Password mode</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyaescbc.encrypt"><code class="docutils literal notranslate"><span class="pre">encrypt()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyaescbc.decrypt"><code class="docutils literal notranslate"><span class="pre">decrypt()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyaescbc.AuthError"><code class="docutils literal notranslate"><span class="pre">AuthError</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyaescbc.delete_bytearray"><code class="docutils literal notranslate"><span class="pre">delete_bytearray()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyaescbc.DEFAULT_ITERATIONS"><code class="docutils literal notranslate"><span class="pre">DEFAULT_ITERATIONS</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyaescbc.MIN_ITERATIONS"><code class="docutils literal notranslate"><span class="pre">MIN_ITERATIONS</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyaescbc.MAX_ITERATIONS"><code class="docutils literal notranslate"><span class="pre">MAX_ITERATIONS</span></code></a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#encrypted-bundle-format">Encrypted Bundle Format</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#low-level-components">Low-Level Components</a><ul class="nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#key-mode">Key mode</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyaescbc.encrypt_with_key"><code class="docutils literal notranslate"><span class="pre">encrypt_with_key()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyaescbc.decrypt_with_key"><code class="docutils literal notranslate"><span class="pre">decrypt_with_key()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyaescbc.generate_key"><code class="docutils literal notranslate"><span class="pre">generate_key()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyaescbc.KEY_SIZE"><code class="docutils literal notranslate"><span class="pre">KEY_SIZE</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#both-modes">Both modes</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyaescbc.AuthError"><code class="docutils literal notranslate"><span class="pre">AuthError</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyaescbc.AuthError.message"><code class="docutils literal notranslate"><span class="pre">AuthError.message</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyaescbc.AuthError.code"><code class="docutils literal notranslate"><span class="pre">AuthError.code</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyaescbc.delete_bytearray"><code class="docutils literal notranslate"><span class="pre">delete_bytearray()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyaescbc.__version__"><code class="docutils literal notranslate"><span class="pre">__version__</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#key-derivation">Key derivation</a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyaescbc.derive_key"><code class="docutils literal notranslate"><span class="pre">derive_key()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyaescbc.MIN_ITERATIONS"><code class="docutils literal notranslate"><span class="pre">MIN_ITERATIONS</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyaescbc.MAX_ITERATIONS"><code class="docutils literal notranslate"><span class="pre">MAX_ITERATIONS</span></code></a></li>
 </ul>
 </li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#authentication">Authentication</a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyaescbc.create_hmac"><code class="docutils literal notranslate"><span class="pre">create_hmac()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyaescbc.check_hmac"><code class="docutils literal notranslate"><span class="pre">check_hmac()</span></code></a></li>
-</ul>
-</li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#bundle-packing-unpacking">Bundle packing / unpacking</a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyaescbc.create_bundle_header"><code class="docutils literal notranslate"><span class="pre">create_bundle_header()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyaescbc.create_encrypted_bundle"><code class="docutils literal notranslate"><span class="pre">create_encrypted_bundle()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyaescbc.extract_cryptography_components"><code class="docutils literal notranslate"><span class="pre">extract_cryptography_components()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyaescbc.BundleComponents"><code class="docutils literal notranslate"><span class="pre">BundleComponents</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#pyaescbc.BundleComponents.cipherdata"><code class="docutils literal notranslate"><span class="pre">BundleComponents.cipherdata</span></code></a></li>
-<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#pyaescbc.BundleComponents.expected_hmac"><code class="docutils literal notranslate"><span class="pre">BundleComponents.expected_hmac</span></code></a></li>
-<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#pyaescbc.BundleComponents.header"><code class="docutils literal notranslate"><span class="pre">BundleComponents.header</span></code></a></li>
-<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#pyaescbc.BundleComponents.iterations"><code class="docutils literal notranslate"><span class="pre">BundleComponents.iterations</span></code></a></li>
-<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#pyaescbc.BundleComponents.iv"><code class="docutils literal notranslate"><span class="pre">BundleComponents.iv</span></code></a></li>
-<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#pyaescbc.BundleComponents.salt"><code class="docutils literal notranslate"><span class="pre">BundleComponents.salt</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#random-data-generation">Random data generation</a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyaescbc.random_bytearray"><code class="docutils literal notranslate"><span class="pre">random_bytearray()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyaescbc.random_iv"><code class="docutils literal notranslate"><span class="pre">random_iv()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyaescbc.random_salt"><code class="docutils literal notranslate"><span class="pre">random_salt()</span></code></a></li>
-</ul>
-</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#deprecated-names">Deprecated names</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#bundle-formats">Bundle formats</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#password-mode-bundle-pacb-format-version-2">Password-mode bundle (<code class="docutils literal notranslate"><span class="pre">PACB</span></code>, format version 2)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#key-mode-bundle-pack-format-version-1">Key-mode bundle (<code class="docutils literal notranslate"><span class="pre">PACK</span></code>, format version 1)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hmac-both-formats">HMAC (both formats)</a></li>
 </ul>
 </li>
 </ul>
@@ -1095,8 +993,8 @@ The data is NOT authenticated by this function: the HMAC must be checked afterwa
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script defer src="_static/scripts/bootstrap.js?digest=a95f357e85573c9b56d5"></script>
-<script defer src="_static/scripts/pydata-sphinx-theme.js?digest=a95f357e85573c9b56d5"></script>
+  <script defer src="_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8"></script>
+<script defer src="_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8"></script>
 
   <footer class="bd-footer">
 <div class="bd-footer__inner bd-page-width">
@@ -1116,8 +1014,7 @@ The data is NOT authenticated by this function: the HMAC must be checked afterwa
         <div class="footer-item">
 
   <p class="sphinx-version">
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.1.3.
-    <br/>
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.0.4.
   </p>
 </div>
       
@@ -1130,7 +1027,7 @@ The data is NOT authenticated by this function: the HMAC must be checked afterwa
         <div class="footer-item">
 <p class="theme-version">
   <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
-  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.19.0.
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.24.0.
 </p></div>
       
     </div>
