@@ -14,13 +14,12 @@
 
 from typing import Optional
 
+from .._common.etm import verify_then_decrypt
+from .._common.delete_bytearray import delete_bytearray
 from .derive_key import derive_key
-from .decrypt_AES_CBC import decrypt_AES_CBC
 from .extract_cryptography_components import extract_cryptography_components
-from .check_hmac import check_hmac
-from .create_hmac import create_hmac
-from .delete_bytearray import delete_bytearray
-from .auth_error import AuthError
+
+_AUTH_ERROR_MESSAGE = 'Authentication failed: wrong password or authdata, or the data has been tampered with.'
 
 
 def encrypted_bundle_to_cleardata(
@@ -32,7 +31,7 @@ def encrypted_bundle_to_cleardata(
     delete_data: bool = False,
 ) -> bytearray:
     r"""
-    Decrypts an encrypted bundle (format version 2) and returns the clear data.
+    Decrypts a password-mode bundle (format version 2) and returns the clear data.
 
     .. code-block:: text
 
@@ -54,7 +53,7 @@ def encrypted_bundle_to_cleardata(
 
             password = bytearray("password", 'utf-8')
             authdata = bytearray("user=toto", 'utf-8')  # same value as for encryption
-            cleardata = pyaescbc.decrypt(encrypted_bundle, password, authdata)
+            cleardata = pyaescbc.decrypt(encrypted_bundle, password, authdata=authdata)
 
     .. note::
 
@@ -64,13 +63,13 @@ def encrypted_bundle_to_cleardata(
     Parameters
     ----------
     encrypted_bundle : bytearray
-        The encrypted bundle created by :func:`pyaescbc.encrypt`.
+        The password-mode bundle created by ``pyaescbc.encrypt``.
 
     password : bytearray
         The user password. It must not be empty.
 
     authdata : Optional[bytearray]
-        The additional authenticated data given at encryption (``None`` if none was given).
+        The additional authenticated data given at encryption, keyword-only (``None`` if none was given).
         It is never modified by this function.
 
     delete_keys : bool
@@ -97,45 +96,49 @@ def encrypted_bundle_to_cleardata(
     AuthError
         If the password or the authdata is wrong, or if the bundle has been tampered with.
     """
-    # Check the types of the parameters
-    if not isinstance(encrypted_bundle, bytearray):
-        raise TypeError('Parameter encrypted_bundle is not bytearray instance.')
-    if not isinstance(password, bytearray):
-        raise TypeError('Parameter password is not bytearray instance.')
-    if authdata is not None and not isinstance(authdata, bytearray):
-        raise TypeError('Parameter authdata is not bytearray instance.')
-    if not isinstance(delete_keys, bool):
-        raise TypeError('Parameter delete_keys is not a boolean.')
-    if not isinstance(delete_data, bool):
-        raise TypeError('Parameter delete_data is not a boolean.')
-
     derived_key = None
-    aes_key = None
-    hmac_key = None
     success = False
+
     try:
+        # Check the types of the parameters
+        if not isinstance(encrypted_bundle, bytearray):
+            raise TypeError('Parameter encrypted_bundle is not bytearray instance.')
+        if not isinstance(password, bytearray):
+            raise TypeError('Parameter password is not bytearray instance.')
+        if authdata is not None and not isinstance(authdata, bytearray):
+            raise TypeError('Parameter authdata is not bytearray instance.')
+        if not isinstance(delete_keys, bool):
+            raise TypeError('Parameter delete_keys is not a boolean.')
+        if not isinstance(delete_data, bool):
+            raise TypeError('Parameter delete_data is not a boolean.')
+
+        # Structure checked BEFORE the (slow) key derivation
         components = extract_cryptography_components(encrypted_bundle)
 
         derived_key = derive_key(password, components.salt, components.iterations)
-        aes_key = derived_key[:32]
-        hmac_key = derived_key[32:]
 
-        computed_hmac = create_hmac(hmac_key, components.header, components.cipherdata, authdata)
-        if not check_hmac(computed_hmac, components.expected_hmac):
-            raise AuthError('Authentication failed: wrong password or authdata, or the data has been tampered with.')
-
-        # Decrypt only authenticated data
-        cleardata = decrypt_AES_CBC(components.cipherdata, aes_key, components.iv)
+        # HMAC verified in constant time, then decryption of authenticated data only
+        # (the sub-keys are wiped by verify_then_decrypt)
+        cleardata = verify_then_decrypt(
+            components.header,
+            components.expected_hmac,
+            components.cipherdata,
+            derived_key,
+            components.iv,
+            authdata=authdata,
+            error_message=_AUTH_ERROR_MESSAGE,
+        )
         success = True
         return cleardata
 
     finally:
         # Secrets are always wiped
-        for secret in (derived_key, aes_key, hmac_key):
-            if secret is not None:
-                delete_bytearray(secret)
+        if derived_key is not None:
+            delete_bytearray(derived_key)
         if delete_keys:
-            delete_bytearray(password)
+            if isinstance(password, bytearray):
+                delete_bytearray(password)
         # The bundle is only wiped once it has been successfully decrypted
         if delete_data and success:
-            delete_bytearray(encrypted_bundle)
+            if isinstance(encrypted_bundle, bytearray):
+                delete_bytearray(encrypted_bundle)

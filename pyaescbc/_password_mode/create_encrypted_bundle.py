@@ -14,15 +14,16 @@
 
 import struct
 
+from .._common.formats import PACB_MAGIC, SALT_SIZE, IV_SIZE, HMAC_SIZE, BLOCK_SIZE
+from .._common.bundle import join_bundle
 from .derive_key import MIN_ITERATIONS, MAX_ITERATIONS
-from .__version__ import __version__
 
 # ---------------------------------------------------------------------------
 # Encrypted bundle format, version 2 (all integers are big-endian)
 #
 #   offset  size  field
 #   0       4     magic       b"PACB"
-#   4       1     version     int
+#   4       1     version     2
 #   5       4     iterations  uint32
 #   9       32    salt
 #   41      16    iv
@@ -30,12 +31,8 @@ from .__version__ import __version__
 #   57      32    hmac
 #   89      16*n  cipherdata  (n >= 1)
 # ---------------------------------------------------------------------------
-MAGIC = b"PACB"
-VERSION = int(__version__[0])
-SALT_SIZE = 32
-IV_SIZE = 16
-HMAC_SIZE = 32
-BLOCK_SIZE = 16
+MAGIC = PACB_MAGIC
+VERSION = 2               # format version: never derive it from the package version
 
 _PREFIX = struct.Struct(">4sBI")      
 HEADER_SIZE = _PREFIX.size + SALT_SIZE + IV_SIZE     # 57
@@ -44,10 +41,10 @@ MIN_BUNDLE_SIZE = HEADER_SIZE + HMAC_SIZE + BLOCK_SIZE  # 105
 
 def create_bundle_header(iterations: int, salt: bytearray, iv: bytearray) -> bytearray:
     r"""
-    Creates the public header of an encrypted bundle (format version 2).
+    Creates the public header of a password-mode encrypted bundle (format version 2).
 
     The header contains every public parameter needed to decrypt the data and must be
-    authenticated by the HMAC (see :func:`pyaescbc.create_hmac`).
+    authenticated by the HMAC (``create_hmac`` in ``_common.mac``).
 
     .. code-block:: text
 
@@ -97,7 +94,8 @@ def create_bundle_header(iterations: int, salt: bytearray, iv: bytearray) -> byt
 
 def create_encrypted_bundle(header: bytearray, expected_hmac: bytearray, cipherdata: bytearray) -> bytearray:
     r"""
-    Creates the encrypted bundle containing all the information needed to decrypt the data.
+    Creates the password-mode encrypted bundle containing all the information needed
+    to decrypt the data.
 
     .. code-block:: text
 
@@ -105,13 +103,13 @@ def create_encrypted_bundle(header: bytearray, expected_hmac: bytearray, cipherd
 
     .. seealso::
 
-        - function :func:`pyaescbc.create_bundle_header` to create the header.
-        - function :func:`pyaescbc.extract_cryptography_components` to parse the bundle.
+        - function :func:`create_bundle_header` to create the header.
+        - function ``extract_cryptography_components`` to parse the bundle.
 
     Parameters
     ----------
     header : bytearray
-        The 57-byte header created by :func:`pyaescbc.create_bundle_header`.
+        The 57-byte header created by :func:`create_bundle_header`.
 
     expected_hmac : bytearray
         The 32-byte HMAC computed over the header, the cipherdata and the authdata.
@@ -139,13 +137,9 @@ def create_encrypted_bundle(header: bytearray, expected_hmac: bytearray, cipherd
     if not isinstance(cipherdata, bytearray):
         raise TypeError('Parameter cipherdata is not bytearray instance.')
 
-    # Check the values of the parameters
+    # Check the format-specific header (the generic sizes are checked by join_bundle)
     if len(header) != HEADER_SIZE or header[:4] != MAGIC or header[4] != VERSION:
         raise ValueError('Parameter header is not a valid version 2 header.')
-    if len(expected_hmac) != HMAC_SIZE:
-        raise ValueError('Parameter expected_hmac must be 32 bytes long.')
-    if len(cipherdata) == 0 or len(cipherdata) % BLOCK_SIZE != 0:
-        raise ValueError('Parameter cipherdata length must be a positive multiple of 16.')
 
-    # Single allocation for the whole bundle
-    return bytearray().join((header, expected_hmac, cipherdata))
+    # Generic layout: header | hmac (32) | cipherdata (16*n)
+    return join_bundle(header, expected_hmac, cipherdata)

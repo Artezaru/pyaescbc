@@ -12,10 +12,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+"""
+HMAC-SHA256 tag of a bundle, and constant-time tag comparison.
+"""
+
 import hashlib
 import hmac
 import struct
 from typing import Optional
+
+from .formats import HMAC_SIZE, HMAC_KEY_SIZE
 
 
 def create_hmac(hmac_key: bytearray, header: bytearray, cipherdata: bytearray, authdata: Optional[bytearray] = None) -> bytearray:
@@ -29,45 +35,44 @@ def create_hmac(hmac_key: bytearray, header: bytearray, cipherdata: bytearray, a
 
     .. code-block:: text
 
-        tag = HMAC-SHA256(hmac_key, len(header) || header || len(cipherdata) || cipherdata || len(authdata) || authdata)
+        tag = HMAC-SHA256(hmac_key, len(header)     || header
+                                 || len(cipherdata) || cipherdata
+                                 || len(authdata)   || authdata)
 
     The ``header`` must contain every public parameter needed to decrypt the bundle
-    (version, iterations, salt, iv, ...) so that none of them can be tampered with.
+    (magic, version, salt, iterations, iv, ... depending on the format), so that none of
+    them can be tampered with.
 
     .. note::
 
         ``authdata=None`` and an empty ``authdata`` produce the same tag.
 
-    .. seealso::
-
-        - function :func:`pyaescbc.derive_key` to create the HMAC key.
-        - function :func:`pyaescbc.check_hmac` to compare two tags in constant time.
-
     Parameters
     ----------
     hmac_key : bytearray
-        The 32-byte key used to create the HMAC (``derived_key[32:]``).
+        The 32-byte HMAC key (``key_material[32:]``). It is not modified.
 
     header : bytearray
-        The public header of the encrypted bundle (everything before the cipherdata).
+        The complete public header of the bundle. It is not modified.
 
     cipherdata : bytearray
-        The encrypted message.
+        The encrypted data. It is not modified.
 
     authdata : Optional[bytearray]
-        Optional additional authenticated data (not encrypted, not stored in the bundle).
+        Optional additional authenticated data (neither encrypted nor stored in the
+        bundle). It is not modified.
 
     Returns
     -------
-    expected_hmac : bytearray
+    tag : bytearray
         The 32-byte HMAC tag.
 
     Raises
     ------
     TypeError
-        If any argument is not a ``bytearray`` instance.
+        If an argument is not a ``bytearray`` instance (``authdata`` may also be ``None``).
     ValueError
-        If ``hmac_key`` isn't 32 bytes long.
+        If ``hmac_key`` is not 32 bytes long.
     """
     # Check the types of the parameters
     if not isinstance(hmac_key, bytearray):
@@ -80,7 +85,7 @@ def create_hmac(hmac_key: bytearray, header: bytearray, cipherdata: bytearray, a
         raise TypeError('Parameter authdata is not bytearray instance.')
 
     # Check the values of the parameters (never include the values in the messages)
-    if len(hmac_key) != 32:
+    if len(hmac_key) != HMAC_KEY_SIZE:
         raise ValueError('Parameter hmac_key must be 32 bytes long.')
 
     if authdata is None:
@@ -92,3 +97,45 @@ def create_hmac(hmac_key: bytearray, header: bytearray, cipherdata: bytearray, a
         mac.update(struct.pack('>Q', len(field)))
         mac.update(field)
     return bytearray(mac.digest())
+
+
+def check_hmac(given_hmac: bytearray, expected_hmac: bytearray) -> bool:
+    r"""
+    Compares two HMAC tags in constant time.
+
+    The comparison time does not depend on how many leading bytes match, so it leaks
+    nothing about the expected tag (see :func:`hmac.compare_digest`).
+
+    Parameters
+    ----------
+    given_hmac : bytearray
+        The 32-byte tag computed from the data (see :func:`create_hmac`).
+
+    expected_hmac : bytearray
+        The 32-byte tag stored in the bundle.
+
+    Returns
+    -------
+    bool
+        ``True`` if the tags are equal, ``False`` otherwise.
+
+    Raises
+    ------
+    TypeError
+        If an argument is not a ``bytearray`` instance.
+    ValueError
+        If a tag is not 32 bytes long.
+    """
+    # Check the types of the parameters
+    if not isinstance(given_hmac, bytearray):
+        raise TypeError('Parameter given_hmac is not bytearray instance.')
+    if not isinstance(expected_hmac, bytearray):
+        raise TypeError('Parameter expected_hmac is not bytearray instance.')
+
+    # Check the values of the parameters (never include the values in the messages)
+    if len(given_hmac) != HMAC_SIZE:
+        raise ValueError('Parameter given_hmac must be 32 bytes long.')
+    if len(expected_hmac) != HMAC_SIZE:
+        raise ValueError('Parameter expected_hmac must be 32 bytes long.')
+
+    return hmac.compare_digest(given_hmac, expected_hmac)

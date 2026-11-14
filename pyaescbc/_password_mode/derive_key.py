@@ -25,6 +25,7 @@ MIN_ITERATIONS = 100_000
 MAX_ITERATIONS = 100_000_000
 
 # Context labels for HKDF: each label yields an independent key.
+# NEVER change them: existing bundles could no longer be decrypted.
 _INFO_AES = b"pyaescbc v2 aes-256-cbc key"
 _INFO_HMAC = b"pyaescbc v2 hmac-sha256 key"
 
@@ -51,11 +52,13 @@ def derive_key(password: bytearray, salt: bytearray, iterations: int) -> bytearr
     has to perform exactly the same amount of work as the legitimate user for each
     password guess.
 
-    .. seealso::
+    Internal building block of the password mode: use ``pyaescbc.encrypt`` and
+    ``pyaescbc.decrypt``.
 
-        - function :func:`pyaescbc.encrypt_AES_CBC` to encrypt the data using AES in CBC mode.
-        - function :func:`pyaescbc.decrypt_AES_CBC` to decrypt the data using AES in CBC mode.
-        - function :func:`pyaescbc.create_hmac` to create the HMAC of the data.
+    .. warning::
+
+        The HKDF labels below must NEVER change: existing bundles could no longer
+        be decrypted.
 
     .. note::
 
@@ -68,11 +71,11 @@ def derive_key(password: bytearray, salt: bytearray, iterations: int) -> bytearr
         The user password. It must not be empty.
 
     salt : bytearray
-        The 32-byte random salt (see :func:`pyaescbc.random_salt`).
+        The 32-byte random salt (``random_salt()`` in ``_common.random``).
 
     iterations : int
-        The number of PBKDF2 iterations, between ``MIN_ITERATIONS`` (100 000)
-        and ``MAX_ITERATIONS`` (100 000 000).
+        The number of PBKDF2 iterations, between :data:`MIN_ITERATIONS` (100 000)
+        and :data:`MAX_ITERATIONS` (100 000 000).
 
     Returns
     -------
